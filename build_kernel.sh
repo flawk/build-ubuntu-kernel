@@ -10,6 +10,7 @@ KERNEL_SUB_VER=${KERNEL_SUB_VER:-"051702"}
 KERNEL_TYPE=${KERNEL_TYPE:-"idle"}
 KERNEL_SCHEDULER=${KERNEL_SCHEDULER:-"cfs"}
 KERNEL_VERSION_LABEL=${KERNEL_VERSION_LABEL:-"custom"}
+KERNEL_FLAVOUR=${KERNEL_FLAVOUR:-"generic"}
 
 KERNEL_MAIN_DIR=${KERNEL_MAIN_DIR:-$HOME/kernel_main}
 KERNEL_BUILD_DIR=${KERNEL_BUILD_DIR:-${KERNEL_MAIN_DIR}/build}
@@ -1688,7 +1689,7 @@ case $yno in
         ;&
     *)
         echo "*** Starting build... ✓";
-        fakeroot debian/rules binary-headers binary-generic binary-perarch;
+        fakeroot debian/rules binary-headers "binary-${KERNEL_FLAVOUR}" binary-perarch;
         ;;
 esac
 
