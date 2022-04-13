@@ -185,14 +185,14 @@ fi
 if [ ${KERNEL_TYPE} == "rt" ]; then
     echo "*** Copying and applying rt patches... ✓";
     if [ ${KERNEL_BASE_VER} == "5.17" ]; then
-        cp -v ${CUSTOM_PATCH_PATH}/rt/${KERNEL_BASE_VER}/patch-5.17-rt15.patch .;
-        patch -p1 < ./patch-5.17-rt15.patch;
+        cp -v ${CUSTOM_PATCH_PATH}/rt/${KERNEL_BASE_VER}/patch-5.17.1-rt17.patch .;
+        patch -p1 < ./patch-5.17.1-rt17.patch;
     elif [ ${KERNEL_BASE_VER} == "5.16" ]; then
         cp -v ${CUSTOM_PATCH_PATH}/rt/${KERNEL_BASE_VER}/patch-5.16.1-rt17.patch .;
         patch -p1 < ./patch-5.16.1-rt17.patch;
     elif [ ${KERNEL_BASE_VER} == "5.15" ]; then
-        cp -v ${CUSTOM_PATCH_PATH}/rt/${KERNEL_BASE_VER}/patch-5.15.31-rt38.patch .;
-        patch -p1 < ./patch-5.15.31-rt38.patch;
+        cp -v ${CUSTOM_PATCH_PATH}/rt/${KERNEL_BASE_VER}/patch-5.15.32-rt39.patch .;
+        patch -p1 < ./patch-5.15.32-rt39.patch;
     elif [ ${KERNEL_BASE_VER} == "5.14" ]; then
         cp -v ${CUSTOM_PATCH_PATH}/rt/${KERNEL_BASE_VER}/patch-5.14.2-rt21.patch .;
         patch -p1 < ./patch-5.14.2-rt21.patch;
@@ -200,8 +200,8 @@ if [ ${KERNEL_TYPE} == "rt" ]; then
         cp -v ${CUSTOM_PATCH_PATH}/rt/${KERNEL_BASE_VER}/patch-5.13-rt1.patch .;
         patch -p1 < ./patch-5.13-rt1.patch;
     elif [ ${KERNEL_BASE_VER} == "5.10" ]; then
-        cp -v ${CUSTOM_PATCH_PATH}/rt/${KERNEL_BASE_VER}/patch-5.10.106-rt64.patch .;
-        patch -p1 < ./patch-5.10.106-rt64.patch;
+        cp -v ${CUSTOM_PATCH_PATH}/rt/${KERNEL_BASE_VER}/patch-5.10.109-rt65.patch .;
+        patch -p1 < ./patch-5.10.109-rt65.patch;
     elif [ ${KERNEL_BASE_VER} == "5.4" ]; then
         cp -v ${CUSTOM_PATCH_PATH}/rt/${KERNEL_BASE_VER}/patch-5.4.182-rt72-rc1.patch .;
         patch -p1 < ./patch-5.4.182-rt72-rc1.patch;
@@ -210,7 +210,7 @@ fi
 
 if [ ${KERNEL_BASE_VER} == "5.18" ]; then   # Latest rc, in development
     echo "*** Copying and applying arch patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/5.17/arch-patches-v10-sep/*.patch .;
+    cp -v ${LUCJAN_PATCH_PATH}/5.17/arch-patches-v12-sep/*.patch .;
     patch -p1 < ./0001-ZEN-Add-sysctl-and-CONFIG-to-disallow-unprivileged-C.patch;
     echo "*** Copying and applying bbr2 patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/5.17/bbr2-patches/*.patch .;
@@ -253,7 +253,7 @@ if [ ${KERNEL_BASE_VER} == "5.18" ]; then   # Latest rc, in development
     patch -p1 < ./0003-init-Kconfig-add-O1-flag.patch;
     patch -p1 < ./0004-Makefile-Turn-off-loop-vectorization-for-GCC-O3-opti.patch;
     echo "*** Copying and applying fixes misc patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/5.17/fixes-miscellaneous-v5-sep/*.patch .;
+    cp -v ${LUCJAN_PATCH_PATH}/5.17/fixes-miscellaneous-v6-sep/*.patch .;
     patch -p1 < ./0001-net-sched-allow-configuring-cake-qdisc-as-default.patch;
     patch -p1 < ./0002-infiniband-Fix-__read_overflow2-error-with-O3-inlini.patch;
     patch -p1 < ./0003-pci-Enable-overrides-for-missing-ACS-capabilities.patch;
@@ -262,7 +262,7 @@ if [ ${KERNEL_BASE_VER} == "5.18" ]; then   # Latest rc, in development
     patch -p1 < ./0008-Disable-stack-conservation-for-GCC.patch;
     patch -p1 < ./0009-openrgb-Deduplicate-piix4-setup-for-HUDSON2-KERNCZ-S.patch;
     patch -p1 < ./0010-kernel-cpu.c-fix-init_cpu_online.patch;
-    patch -p1 < ./0022-cpufreq-intel_pstate-Handle-no_turbo-in-frequency-in.patch;
+    patch -p1 < ./0020-cpufreq-intel_pstate-Handle-no_turbo-in-frequency-in.patch;
     echo "*** Copying and applying lqx patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/5.17/lqx-patches/*.patch .;
     patch -p1 < ./0001-lqx-patches.patch;
@@ -304,14 +304,11 @@ if [ ${KERNEL_BASE_VER} == "5.18" ]; then   # Latest rc, in development
     patch -p1 < ./0004-mm-set-8-megabytes-for-address_space-level-file-read.patch;
 elif [ ${KERNEL_BASE_VER} == "5.17" ]; then # Latest mainline
     echo "*** Copying and applying arch patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/arch-patches-v10/*.patch .;
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/arch-patches-v12/*.patch .;
     patch -p1 < ./0001-arch-patches.patch;
     echo "*** Copying and applying bbr2 patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/bbr2-patches/*.patch .;
     patch -p1 < ./0001-bbr2-5.17-introduce-BBRv2.patch;
-    echo "*** Copying and applying btrfs patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/btrfs-patches-v3/*.patch .;
-    patch -p1 < ./0001-btrfs-patches.patch;
     echo "*** Copying and applying clearlinux patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/clearlinux-patches/*.patch .;
     patch -p1 < ./0001-clearlinux-patches.patch;
@@ -325,7 +322,7 @@ elif [ ${KERNEL_BASE_VER} == "5.17" ]; then # Latest mainline
     patch -p1 < ./0003-init-Kconfig-add-O1-flag.patch;
     patch -p1 < ./0004-Makefile-Turn-off-loop-vectorization-for-GCC-O3-opti.patch;
     echo "*** Copying and applying fixes misc patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/fixes-miscellaneous-v5-sep/*.patch .;
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/fixes-miscellaneous-v6-sep/*.patch .;
     patch -p1 < ./0001-net-sched-allow-configuring-cake-qdisc-as-default.patch;
     patch -p1 < ./0002-infiniband-Fix-__read_overflow2-error-with-O3-inlini.patch;
     patch -p1 < ./0003-pci-Enable-overrides-for-missing-ACS-capabilities.patch;
@@ -335,18 +332,16 @@ elif [ ${KERNEL_BASE_VER} == "5.17" ]; then # Latest mainline
     patch -p1 < ./0008-Disable-stack-conservation-for-GCC.patch;
     patch -p1 < ./0009-openrgb-Deduplicate-piix4-setup-for-HUDSON2-KERNCZ-S.patch;
     patch -p1 < ./0010-kernel-cpu.c-fix-init_cpu_online.patch;
-    patch -p1 < ./0011-drm-amd-amdgpu-amdgpu_cs-fix-refcount-leak-of-a-dma_.patch;
-    patch -p1 < ./0012-drm-amd-display-Fix-memory-leak.patch;
-    patch -p1 < ./0013-f2fs-move-f2fs-to-use-reader-unfair-rwsems.patch;
-    patch -p1 < ./0014-f2fs-Restore-rwsem-lockdep-support.patch;
-    patch -p1 < ./0015-f2fs-avoid-an-infinite-loop-in-f2fs_sync_dirty_inode.patch;
-    patch -p1 < ./0016-f2fs-introduce-F2FS_UNFAIR_RWSEM-to-support-unfair-r.patch;
-    patch -p1 < ./0017-sched-preempt-Tell-about-PREEMPT_DYNAMIC-on-kernel-h.patch;
-    patch -p1 < ./0018-objtool-Default-ignore-INT3-for-unreachable.patch;
-    patch -p1 < ./0019-shmem-mapping_set_exiting-to-help-mapped-resilience.patch;
-    patch -p1 < ./0020-tmpfs-do-not-allocate-pages-on-read.patch;
-    patch -p1 < ./0021-x86-chacha20-Avoid-spurious-jumps-to-other-functions.patch;
-    patch -p1 < ./0022-cpufreq-intel_pstate-Handle-no_turbo-in-frequency-in.patch;
+    patch -p1 < ./0011-f2fs-move-f2fs-to-use-reader-unfair-rwsems.patch;
+    patch -p1 < ./0012-f2fs-Restore-rwsem-lockdep-support.patch;
+    patch -p1 < ./0013-f2fs-avoid-an-infinite-loop-in-f2fs_sync_dirty_inode.patch;
+    patch -p1 < ./0014-f2fs-introduce-F2FS_UNFAIR_RWSEM-to-support-unfair-r.patch;
+    patch -p1 < ./0015-sched-preempt-Tell-about-PREEMPT_DYNAMIC-on-kernel-h.patch;
+    patch -p1 < ./0016-objtool-Default-ignore-INT3-for-unreachable.patch;
+    patch -p1 < ./0017-shmem-mapping_set_exiting-to-help-mapped-resilience.patch;
+    patch -p1 < ./0018-tmpfs-do-not-allocate-pages-on-read.patch;
+    patch -p1 < ./0019-x86-chacha20-Avoid-spurious-jumps-to-other-functions.patch;
+    patch -p1 < ./0020-cpufreq-intel_pstate-Handle-no_turbo-in-frequency-in.patch;
     echo "*** Copying and applying hwmon patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/hwmon-patches-v2/*.patch .;
     patch -p1 < ./0001-hwmon-patches.patch;
@@ -392,6 +387,9 @@ elif [ ${KERNEL_BASE_VER} == "5.17" ]; then # Latest mainline
     sed -i 's/sched_nr_migrate = 32/sched_nr_migrate = 256/g' ./kernel/sched/core.c;
     patch -p1 < ./0004-mm-set-8-megabytes-for-address_space-level-file-read.patch;
     if [ ${KERNEL_TYPE} != "rt" ]; then
+        echo "*** Copying and applying btrfs patches.. ✓";
+        cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/btrfs-patches-v3/*.patch .;
+        patch -p1 < ./0001-btrfs-patches.patch;
         echo "*** Copying and applying lru patches.. ✓";
         cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/lru-patches-pf-v3/*.patch .;
         patch -p1 < ./0001-lru-patches.patch;
