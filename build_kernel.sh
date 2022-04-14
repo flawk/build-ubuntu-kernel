@@ -2,9 +2,7 @@
 
 # Compile the Linux kernel for Ubuntu.
 
-# TODO: this is causing an issue with genconfigs, need to figure out why so we ca re-enable.
-#set -euo pipefail
-set -e
+set -euo pipefail
 
 KERNEL_BASE_VER=${KERNEL_BASE_VER:-"5.17"}
 KERNEL_PATCH_VER=${KERNEL_PATCH_VER:-"5.17.3"}
@@ -1661,7 +1659,9 @@ read yno;
 case $yno in
     [yY] | [yY][Ee][Ss] )
         echo "*** Auto-filling NEW configs... ✓";
+        set +e
         yes "" | fakeroot debian/rules ${DEB_ARGS[*]} genconfigs; # defaultconfigs
+        set -e
         ;;
     [nN] | [n|N][O|o] )
         ;&
