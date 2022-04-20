@@ -350,7 +350,7 @@ elif [ ${KERNEL_BASE_VER} == "5.17" ]; then # Latest mainline
     patch -p1 < ./0002-PCI-Add-Intel-remapped-NVMe-device-support.patch;
     patch -p1 < ./0003-Input-evdev-use-call_rcu-when-detaching-client.patch;
     #patch -p1 < ./0004-tick-Detect-and-fix-jiffies-update-stall.patch;
-    patch -p1 < ./0005-tick-rcu-Remove-obsolete-rcu_needs_cpu-parameters.patch;
+    #patch -p1 < ./0005-tick-rcu-Remove-obsolete-rcu_needs_cpu-parameters.patch;
     patch -p1 < ./0006-tick-rcu-Stop-allowing-RCU_SOFTIRQ-in-idle.patch;
     patch -p1 < ./0007-lib-irq_poll-Declare-IRQ_POLL-softirq-vector-as-ksof.patch;
     patch -p1 < ./0008-gpio-Request-interrupts-after-IRQ-is-initialized.patch;
