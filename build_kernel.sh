@@ -352,7 +352,7 @@ elif [ ${KERNEL_BASE_VER} == "5.17" ]; then # Latest mainline
     patch -p1 < ./0005-tick-rcu-Remove-obsolete-rcu_needs_cpu-parameters.patch;
     patch -p1 < ./0006-tick-rcu-Stop-allowing-RCU_SOFTIRQ-in-idle.patch;
     patch -p1 < ./0007-lib-irq_poll-Declare-IRQ_POLL-softirq-vector-as-ksof.patch;
-    patch -p1 < ./0008-gpio-Request-interrupts-after-IRQ-is-initialized.patch;
+    #patch -p1 < ./0008-gpio-Request-interrupts-after-IRQ-is-initialized.patch;
     echo "*** Copying and applying smbus patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/smbus-patches/*.patch .;
     patch -p1 < ./0001-smbus-miscellaneous.patch;
