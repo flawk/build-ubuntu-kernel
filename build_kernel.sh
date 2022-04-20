@@ -1659,9 +1659,9 @@ read yno;
 case $yno in
     [yY] | [yY][Ee][Ss] )
         echo "*** Auto-filling NEW configs... ✓";
-        set +e
+        set +o pipefail
         yes "" | fakeroot debian/rules ${DEB_ARGS[*]} genconfigs; # defaultconfigs
-        set -e
+        set -o pipefail
         ;;
     [nN] | [n|N][O|o] )
         ;&
