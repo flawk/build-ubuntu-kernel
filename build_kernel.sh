@@ -3,7 +3,6 @@
 # Compile the Linux kernel for Ubuntu.
 
 set -euo pipefail
-set -x
 
 KERNEL_BASE_VER=${KERNEL_BASE_VER:-"5.17"}
 KERNEL_PATCH_VER=${KERNEL_PATCH_VER:-"5.17.4"}
