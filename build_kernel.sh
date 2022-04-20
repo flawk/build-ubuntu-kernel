@@ -1734,7 +1734,7 @@ mv -v ../${COMPILED_KERNEL_VER}-${TIME_BUILT} ${COMPILED_KERNELS_DIR};
 VBOX_SUPPORT=${VBOX_SUPPORT:-"no"}
 if [ ${VBOX_SUPPORT} == "yes" ] && [ "${KERNEL_TYPE}" != "rt" ]; then
     echo "*** Enabling VirtualBox support... ✓";
-    sudo cp -v ${CUSTOM_PATCH_PATH}/virtualbox-support/module.lds /usr/src/linux-headers-${KERNEL_PATCH_VER}-${KERNEL_SUB_VER}+${KERNEL_VERSION_LABEL}${KERNEL_TYPE}-generic/scripts/module.lds;
+    sudo cp -v ${CUSTOM_PATCH_PATH}/virtualbox-support/module.lds /usr/src/linux-headers-${KERNEL_PATCH_VER}-${KERNEL_SUB_VER}+${KERNEL_VERSION_LABEL}${KERNEL_TYPE}-${KERNEL_FLAVOUR}/scripts/module.lds;
     sudo /sbin/vboxconfig;
 fi
 
@@ -1758,4 +1758,4 @@ ls -alh ${COMPILED_KERNELS_DIR}/${COMPILED_KERNEL_VER}-${TIME_BUILT};
 
 cd;
 echo "*** All done. ✓";
-echo "*** You can now reboot and select ${COMPILED_KERNEL_VER}-generic in GRUB.";
+echo "*** You can now reboot and select ${COMPILED_KERNEL_VER}-${KERNEL_FLAVOUR} in GRUB.";
