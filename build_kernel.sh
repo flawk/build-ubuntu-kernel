@@ -131,18 +131,18 @@ cd ${KERNEL_SRC_NAME};
 
 if [ -d ${PATCH_PATH}/lucjan-patches ]; then
     echo "*** Found lucjan-patches, pulling latest... ✓";
-    git -C ${PATCH_PATH}/lucjan-patches pull https://github.com/sirlucjan/kernel-patches.git;
+    git -C ${PATCH_PATH}/lucjan-patches pull git@github.com:flawk/sirlucjan-kernel-patches.git;
 else
     echo "*** Fetching lucjan patches... ✓";
-    git clone https://github.com/sirlucjan/kernel-patches.git ${PATCH_PATH}/lucjan-patches;
+    git clone git@github.com:flawk/sirlucjan-kernel-patches.git ${PATCH_PATH}/lucjan-patches;
 fi
 
 if [ -d ${PATCH_PATH}/xanmod-patches ]; then
     echo "*** Found xanmod-patches, pulling latest... ✓";
-    git -C ${PATCH_PATH}/xanmod-patches pull https://github.com/xanmod/linux-patches.git;
+    git -C ${PATCH_PATH}/xanmod-patches pull git@github.com:flawk/xanmod-linux-patches.git;
 else
     echo "*** Fetching xanmod patches... ✓";
-    git clone https://github.com/xanmod/linux-patches.git ${PATCH_PATH}/xanmod-patches;
+    git clone git@github.com:flawk/xanmod-linux-patches.git ${PATCH_PATH}/xanmod-patches;
 fi
 
 UBUNTU_PATCHES=${UBUNTU_PATCHES:-"yes"}
