@@ -5,8 +5,8 @@
 set -euo pipefail
 
 KERNEL_BASE_VER=${KERNEL_BASE_VER:-"5.17"}
-KERNEL_PATCH_VER=${KERNEL_PATCH_VER:-"5.17.4"}
-KERNEL_SUB_VER=${KERNEL_SUB_VER:-"051704"}
+KERNEL_PATCH_VER=${KERNEL_PATCH_VER:-"5.17.3"}
+KERNEL_SUB_VER=${KERNEL_SUB_VER:-"051703"}
 KERNEL_TYPE=${KERNEL_TYPE:-"idle"}
 KERNEL_SCHEDULER=${KERNEL_SCHEDULER:-"cfs"}
 KERNEL_VERSION_LABEL=${KERNEL_VERSION_LABEL:-"custom"}
@@ -302,7 +302,7 @@ if [ ${KERNEL_BASE_VER} == "5.18" ]; then   # Latest rc, in development
     patch -p1 < ./0004-mm-set-8-megabytes-for-address_space-level-file-read.patch;
 elif [ ${KERNEL_BASE_VER} == "5.17" ]; then # Latest mainline
     echo "*** Copying and applying arch patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/arch-patches-v13/*.patch .;
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/arch-patches-v12/*.patch .;
     patch -p1 < ./0001-arch-patches.patch;
     echo "*** Copying and applying bbr2 patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/bbr2-patches/*.patch .;
@@ -386,7 +386,7 @@ elif [ ${KERNEL_BASE_VER} == "5.17" ]; then # Latest mainline
     patch -p1 < ./0004-mm-set-8-megabytes-for-address_space-level-file-read.patch;
     if [ ${KERNEL_TYPE} != "rt" ]; then
         echo "*** Copying and applying btrfs patches.. ✓";
-        cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/btrfs-patches-v5/*.patch .;
+        cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/btrfs-patches-v4/*.patch .;
         patch -p1 < ./0001-btrfs-patches.patch;
         echo "*** Copying and applying lru patches.. ✓";
         cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/lru-patches-pf-v3/*.patch .;
