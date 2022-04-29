@@ -5,8 +5,8 @@
 set -euo pipefail
 
 KERNEL_BASE_VER=${KERNEL_BASE_VER:-"5.17"}
-KERNEL_PATCH_VER=${KERNEL_PATCH_VER:-"5.17.4"}
-KERNEL_SUB_VER=${KERNEL_SUB_VER:-"051704"}
+KERNEL_PATCH_VER=${KERNEL_PATCH_VER:-"5.17.5"}
+KERNEL_SUB_VER=${KERNEL_SUB_VER:-"051705"}
 KERNEL_TYPE=${KERNEL_TYPE:-"idle"}
 KERNEL_SCHEDULER=${KERNEL_SCHEDULER:-"cfs"}
 KERNEL_VERSION_LABEL=${KERNEL_VERSION_LABEL:-"custom"}
@@ -208,7 +208,7 @@ fi
 
 if [ ${KERNEL_BASE_VER} == "5.18" ]; then   # Latest rc, in development
     echo "*** Copying and applying arch patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/5.17/arch-patches-v15-sep/*.patch .;
+    cp -v ${LUCJAN_PATCH_PATH}/5.17/arch-patches-v16-sep/*.patch .;
     patch -p1 < ./0001-ZEN-Add-sysctl-and-CONFIG-to-disallow-unprivileged-C.patch;
     echo "*** Copying and applying bbr2 patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/5.17/bbr2-patches/*.patch .;
@@ -250,7 +250,7 @@ if [ ${KERNEL_BASE_VER} == "5.18" ]; then   # Latest rc, in development
     patch -p1 < ./0003-init-Kconfig-add-O1-flag.patch;
     patch -p1 < ./0004-Makefile-Turn-off-loop-vectorization-for-GCC-O3-opti.patch;
     echo "*** Copying and applying fixes misc patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/5.17/fixes-miscellaneous-v6-sep/*.patch .;
+    cp -v ${LUCJAN_PATCH_PATH}/5.17/fixes-miscellaneous-v7-sep/*.patch .;
     patch -p1 < ./0001-net-sched-allow-configuring-cake-qdisc-as-default.patch;
     patch -p1 < ./0002-infiniband-Fix-__read_overflow2-error-with-O3-inlini.patch;
     patch -p1 < ./0003-pci-Enable-overrides-for-missing-ACS-capabilities.patch;
@@ -260,6 +260,7 @@ if [ ${KERNEL_BASE_VER} == "5.18" ]; then   # Latest rc, in development
     patch -p1 < ./0009-openrgb-Deduplicate-piix4-setup-for-HUDSON2-KERNCZ-S.patch;
     patch -p1 < ./0010-kernel-cpu.c-fix-init_cpu_online.patch;
     patch -p1 < ./0020-cpufreq-intel_pstate-Handle-no_turbo-in-frequency-in.patch;
+    patch -p1 < ./0021-xfs-fix-soft-lockup-via-spinning-in-filestream-ag-se.patch;
     echo "*** Copying and applying lqx patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/5.17/lqx-patches/*.patch .;
     patch -p1 < ./0001-lqx-patches.patch;
@@ -301,7 +302,7 @@ if [ ${KERNEL_BASE_VER} == "5.18" ]; then   # Latest rc, in development
     patch -p1 < ./0004-mm-set-8-megabytes-for-address_space-level-file-read.patch;
 elif [ ${KERNEL_BASE_VER} == "5.17" ]; then # Latest mainline
     echo "*** Copying and applying arch patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/arch-patches-v15/*.patch .;
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/arch-patches-v16/*.patch .;
     patch -p1 < ./0001-arch-patches.patch;
     echo "*** Copying and applying bbr2 patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/bbr2-patches/*.patch .;
@@ -319,7 +320,7 @@ elif [ ${KERNEL_BASE_VER} == "5.17" ]; then # Latest mainline
     patch -p1 < ./0003-init-Kconfig-add-O1-flag.patch;
     patch -p1 < ./0004-Makefile-Turn-off-loop-vectorization-for-GCC-O3-opti.patch;
     echo "*** Copying and applying fixes misc patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/fixes-miscellaneous-v6-sep/*.patch .;
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/fixes-miscellaneous-v7-sep/*.patch .;
     patch -p1 < ./0001-net-sched-allow-configuring-cake-qdisc-as-default.patch;
     patch -p1 < ./0002-infiniband-Fix-__read_overflow2-error-with-O3-inlini.patch;
     patch -p1 < ./0003-pci-Enable-overrides-for-missing-ACS-capabilities.patch;
@@ -339,6 +340,7 @@ elif [ ${KERNEL_BASE_VER} == "5.17" ]; then # Latest mainline
     patch -p1 < ./0018-tmpfs-do-not-allocate-pages-on-read.patch;
     patch -p1 < ./0019-x86-chacha20-Avoid-spurious-jumps-to-other-functions.patch;
     patch -p1 < ./0020-cpufreq-intel_pstate-Handle-no_turbo-in-frequency-in.patch;
+    patch -p1 < ./0021-xfs-fix-soft-lockup-via-spinning-in-filestream-ag-se.patch;
     echo "*** Copying and applying hwmon patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/hwmon-patches-v3/*.patch .;
     patch -p1 < ./0001-hwmon-patches.patch;
@@ -1567,11 +1569,11 @@ if [ ${KERNEL_SCHEDULER} == "cacule" ] && [ "${KERNEL_TYPE}" != "rt" ]; then
 fi
 
 # Examples:
-# 5.17.4-051704+customidle-generic
-# 5.17.4-051704+customfull-generic
-# 5.17.4-051704+customrt-generic
+# 5.17.5-051705+customidle-generic
+# 5.17.5-051705+customfull-generic
+# 5.17.5-051705+customrt-generic
 # Note: A hyphen between label and type (e.g. customidle -> custom-idle) causes problems with some parsers
-# Because the final version name becomes: 5.17.4-051704+custom-idle-generic, so just keep it combined
+# Because the final version name becomes: 5.17.5-051705+custom-idle-generic, so just keep it combined
 echo "*** Updating version in changelog (necessary for Ubuntu)... ✓";
 sed -i "s/${KERNEL_SUB_VER}/${KERNEL_SUB_VER}+${KERNEL_VERSION_LABEL}${KERNEL_TYPE}/g" ./debian.master/changelog;
 
@@ -1725,7 +1727,7 @@ echo "*** Finished installing kernel, cleaning up build directory... ✓";
 rm -rf ${KERNEL_BUILD_DIR};
 
 # To list your installed kernels: sudo update-grub2
-# To uninstall a kernel: sudo apt purge *5.17.4-051704+customidle-generic*
+# To uninstall a kernel: sudo apt purge *5.17.5-051705+customidle-generic*
 # Also, keep an eye out for the directories below as they build up over time.
 echo "ls -alh /usr/src"
 ls -alh /usr/src;
