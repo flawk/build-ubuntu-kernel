@@ -1701,7 +1701,7 @@ esac
 echo "*** Finished compiling the kernel, installing... ✓";
 COMPILED_KERNEL_VER=${KERNEL_PATCH_VER}-${KERNEL_SUB_VER}+${KERNEL_VERSION_LABEL}${KERNEL_TYPE}
 TIME_BUILT=$(date +%s)
-sudo dpkg -i ../*.deb;
+sudo dpkg -ignore-depends=crda,wireless-crda -i ../*.deb;
 mkdir -pv ${COMPILED_KERNELS_DIR};
 mkdir -pv ../${COMPILED_KERNEL_VER}-${TIME_BUILT};
 mv -v ../*.deb ../${COMPILED_KERNEL_VER}-${TIME_BUILT};
