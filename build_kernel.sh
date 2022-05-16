@@ -5,8 +5,8 @@
 set -euo pipefail
 
 KERNEL_BASE_VER=${KERNEL_BASE_VER:-"5.17"}
-KERNEL_PATCH_VER=${KERNEL_PATCH_VER:-"5.17.5"}
-KERNEL_SUB_VER=${KERNEL_SUB_VER:-"051705"}
+KERNEL_PATCH_VER=${KERNEL_PATCH_VER:-"5.17.7"}
+KERNEL_SUB_VER=${KERNEL_SUB_VER:-"051707"}
 KERNEL_TYPE=${KERNEL_TYPE:-"idle"}
 KERNEL_SCHEDULER=${KERNEL_SCHEDULER:-"cfs"}
 KERNEL_VERSION_LABEL=${KERNEL_VERSION_LABEL:-"custom"}
@@ -211,7 +211,7 @@ if [ ${KERNEL_BASE_VER} == "5.18" ]; then   # Latest rc, in development
     cp -v ${LUCJAN_PATCH_PATH}/5.17/arch-patches-v16-sep/*.patch .;
     patch -p1 < ./0001-ZEN-Add-sysctl-and-CONFIG-to-disallow-unprivileged-C.patch;
     echo "*** Copying and applying bbr2 patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/5.17/bbr2-patches/*.patch .;
+    cp -v ${LUCJAN_PATCH_PATH}/5.17/bbr2-patches-v3/*.patch .;
     patch -p1 < ./0001-bbr2-5.17-introduce-BBRv2.patch;
     echo "*** Copying and applying clearlinux patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/5.17/clearlinux-patches-sep/*.patch .;
@@ -250,7 +250,7 @@ if [ ${KERNEL_BASE_VER} == "5.18" ]; then   # Latest rc, in development
     patch -p1 < ./0003-init-Kconfig-add-O1-flag.patch;
     patch -p1 < ./0004-Makefile-Turn-off-loop-vectorization-for-GCC-O3-opti.patch;
     echo "*** Copying and applying fixes misc patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/5.17/fixes-miscellaneous-v7-sep/*.patch .;
+    cp -v ${LUCJAN_PATCH_PATH}/5.17/fixes-miscellaneous-v9-sep/*.patch .;
     patch -p1 < ./0001-net-sched-allow-configuring-cake-qdisc-as-default.patch;
     patch -p1 < ./0002-infiniband-Fix-__read_overflow2-error-with-O3-inlini.patch;
     patch -p1 < ./0003-pci-Enable-overrides-for-missing-ACS-capabilities.patch;
@@ -261,6 +261,7 @@ if [ ${KERNEL_BASE_VER} == "5.18" ]; then   # Latest rc, in development
     patch -p1 < ./0010-kernel-cpu.c-fix-init_cpu_online.patch;
     patch -p1 < ./0020-cpufreq-intel_pstate-Handle-no_turbo-in-frequency-in.patch;
     patch -p1 < ./0021-xfs-fix-soft-lockup-via-spinning-in-filestream-ag-se.patch;
+    patch -p1 < ./0023-net-atlantic-always-deep-reset-on-pm-op-fixing-null-.patch;
     echo "*** Copying and applying lqx patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/5.17/lqx-patches/*.patch .;
     patch -p1 < ./0001-lqx-patches.patch;
@@ -275,7 +276,7 @@ if [ ${KERNEL_BASE_VER} == "5.18" ]; then   # Latest rc, in development
     patch -p1 < ./0005-XANMOD-Change-rcutree.kthread_prio-to-SCHED_RR-polic.patch;
     patch -p1 < ./0006-XANMOD-block-mq-deadline-Disable-front_merges-by-def.patch;
     echo "*** Copying and applying lucjan's zen patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/5.17/zen-patches/*.patch .;
+    cp -v ${LUCJAN_PATCH_PATH}/5.17/zen-patches-v2/*.patch .;
     patch -p1 < ./0001-zen-patches.patch;
     echo "*** Copying and applying misc xanmod tweaks.. ✓";
     cp -v ${XANMOD_PATCH_PATH}/linux-5.17.y-xanmod/xanmod/*.patch .;
@@ -305,8 +306,11 @@ elif [ ${KERNEL_BASE_VER} == "5.17" ]; then # Latest mainline
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/arch-patches-v16/*.patch .;
     patch -p1 < ./0001-arch-patches.patch;
     echo "*** Copying and applying bbr2 patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/bbr2-patches/*.patch .;
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/bbr2-patches-v3/*.patch .;
     patch -p1 < ./0001-bbr2-5.17-introduce-BBRv2.patch;
+    echo "*** Copying and applying blk patches.. ✓";
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/blk-patches-v2/*.patch .;
+    patch -p1 < ./0001-blk-patches.patch;
     echo "*** Copying and applying clearlinux patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/clearlinux-patches/*.patch .;
     patch -p1 < ./0001-clearlinux-patches.patch;
@@ -320,7 +324,7 @@ elif [ ${KERNEL_BASE_VER} == "5.17" ]; then # Latest mainline
     patch -p1 < ./0003-init-Kconfig-add-O1-flag.patch;
     patch -p1 < ./0004-Makefile-Turn-off-loop-vectorization-for-GCC-O3-opti.patch;
     echo "*** Copying and applying fixes misc patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/fixes-miscellaneous-v7-sep/*.patch .;
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/fixes-miscellaneous-v9-sep/*.patch .;
     patch -p1 < ./0001-net-sched-allow-configuring-cake-qdisc-as-default.patch;
     patch -p1 < ./0002-infiniband-Fix-__read_overflow2-error-with-O3-inlini.patch;
     patch -p1 < ./0003-pci-Enable-overrides-for-missing-ACS-capabilities.patch;
@@ -341,9 +345,11 @@ elif [ ${KERNEL_BASE_VER} == "5.17" ]; then # Latest mainline
     patch -p1 < ./0019-x86-chacha20-Avoid-spurious-jumps-to-other-functions.patch;
     patch -p1 < ./0020-cpufreq-intel_pstate-Handle-no_turbo-in-frequency-in.patch;
     patch -p1 < ./0021-xfs-fix-soft-lockup-via-spinning-in-filestream-ag-se.patch;
+    patch -p1 < ./0022-xfs-convert-buffer-flags-to-unsigned.patch;
+    patch -p1 < ./0023-net-atlantic-always-deep-reset-on-pm-op-fixing-null-.patch;
     echo "*** Copying and applying hwmon patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/hwmon-patches-v3/*.patch .;
-    patch -p1 < ./0001-hwmon-patches.patch;
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/hwmon-patches-v6/*.patch .;
+    patch -p1 < ./0001-hwmon-5.17-patches.patch;
     echo "*** Copying and applying lqx patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/lqx-patches/*.patch .;
     patch -p1 < ./0001-lqx-patches.patch;
@@ -357,10 +363,10 @@ elif [ ${KERNEL_BASE_VER} == "5.17" ]; then # Latest mainline
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/v4l2loopback-patches-v2/*.patch .;
     patch -p1 < ./0001-v4l2loopback-patches.patch;
     echo "*** Copying and applying lucjan's xanmod patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/xanmod-patches-v3/*.patch .;
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/xanmod-patches-v4/*.patch .;
     patch -p1 < ./0001-xanmod-miscellaneous.patch;
     echo "*** Copying and applying lucjan's zen patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/zen-patches/*.patch .;
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/zen-patches-v2/*.patch .;
     patch -p1 < ./0001-zen-patches.patch;
     echo "*** Copying and applying misc xanmod tweaks.. ✓";
     cp -v ${XANMOD_PATCH_PATH}/linux-${KERNEL_BASE_VER}.y-xanmod/xanmod/*.patch .;
@@ -387,7 +393,7 @@ elif [ ${KERNEL_BASE_VER} == "5.17" ]; then # Latest mainline
     patch -p1 < ./0004-mm-set-8-megabytes-for-address_space-level-file-read.patch;
     if [ ${KERNEL_TYPE} != "rt" ]; then
         echo "*** Copying and applying btrfs patches.. ✓";
-        cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/btrfs-patches-v6/*.patch .;
+        cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/btrfs-patches-v7/*.patch .;
         patch -p1 < ./0001-btrfs-patches.patch;
         echo "*** Copying and applying lru patches.. ✓";
         cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/lru-patches-pf-v3/*.patch .;
@@ -1569,11 +1575,11 @@ if [ ${KERNEL_SCHEDULER} == "cacule" ] && [ "${KERNEL_TYPE}" != "rt" ]; then
 fi
 
 # Examples:
-# 5.17.5-051705+customidle-generic
-# 5.17.5-051705+customfull-generic
-# 5.17.5-051705+customrt-generic
+# 5.17.7-051707+customidle-generic
+# 5.17.7-051707+customfull-generic
+# 5.17.7-051707+customrt-generic
 # Note: A hyphen between label and type (e.g. customidle -> custom-idle) causes problems with some parsers
-# Because the final version name becomes: 5.17.5-051705+custom-idle-generic, so just keep it combined
+# Because the final version name becomes: 5.17.7-051707+custom-idle-generic, so just keep it combined
 echo "*** Updating version in changelog (necessary for Ubuntu)... ✓";
 sed -i "s/${KERNEL_SUB_VER}/${KERNEL_SUB_VER}+${KERNEL_VERSION_LABEL}${KERNEL_TYPE}/g" ./debian.master/changelog;
 
@@ -1727,7 +1733,7 @@ echo "*** Finished installing kernel, cleaning up build directory... ✓";
 rm -rf ${KERNEL_BUILD_DIR};
 
 # To list your installed kernels: sudo update-grub2
-# To uninstall a kernel: sudo apt purge *5.17.5-051705+customidle-generic*
+# To uninstall a kernel: sudo apt purge *5.17.7-051707+customidle-generic*
 # Also, keep an eye out for the directories below as they build up over time.
 echo "ls -alh /usr/src"
 ls -alh /usr/src;
