@@ -5,8 +5,8 @@
 set -euo pipefail
 
 KERNEL_BASE_VER=${KERNEL_BASE_VER:-"5.17"}
-KERNEL_PATCH_VER=${KERNEL_PATCH_VER:-"5.17.7"}
-KERNEL_SUB_VER=${KERNEL_SUB_VER:-"051707"}
+KERNEL_PATCH_VER=${KERNEL_PATCH_VER:-"5.17.8"}
+KERNEL_SUB_VER=${KERNEL_SUB_VER:-"051708"}
 KERNEL_TYPE=${KERNEL_TYPE:-"idle"}
 KERNEL_SCHEDULER=${KERNEL_SCHEDULER:-"cfs"}
 KERNEL_VERSION_LABEL=${KERNEL_VERSION_LABEL:-"custom"}
@@ -250,7 +250,7 @@ if [ ${KERNEL_BASE_VER} == "5.18" ]; then   # Latest rc, in development
     patch -p1 < ./0003-init-Kconfig-add-O1-flag.patch;
     patch -p1 < ./0004-Makefile-Turn-off-loop-vectorization-for-GCC-O3-opti.patch;
     echo "*** Copying and applying fixes misc patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/5.17/fixes-miscellaneous-v9-sep/*.patch .;
+    cp -v ${LUCJAN_PATCH_PATH}/5.17/fixes-miscellaneous-v11-sep/*.patch .;
     patch -p1 < ./0001-net-sched-allow-configuring-cake-qdisc-as-default.patch;
     patch -p1 < ./0002-infiniband-Fix-__read_overflow2-error-with-O3-inlini.patch;
     patch -p1 < ./0003-pci-Enable-overrides-for-missing-ACS-capabilities.patch;
@@ -261,7 +261,6 @@ if [ ${KERNEL_BASE_VER} == "5.18" ]; then   # Latest rc, in development
     patch -p1 < ./0010-kernel-cpu.c-fix-init_cpu_online.patch;
     patch -p1 < ./0020-cpufreq-intel_pstate-Handle-no_turbo-in-frequency-in.patch;
     patch -p1 < ./0021-xfs-fix-soft-lockup-via-spinning-in-filestream-ag-se.patch;
-    patch -p1 < ./0023-net-atlantic-always-deep-reset-on-pm-op-fixing-null-.patch;
     echo "*** Copying and applying lqx patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/5.17/lqx-patches/*.patch .;
     patch -p1 < ./0001-lqx-patches.patch;
@@ -324,7 +323,7 @@ elif [ ${KERNEL_BASE_VER} == "5.17" ]; then # Latest mainline
     patch -p1 < ./0003-init-Kconfig-add-O1-flag.patch;
     patch -p1 < ./0004-Makefile-Turn-off-loop-vectorization-for-GCC-O3-opti.patch;
     echo "*** Copying and applying fixes misc patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/fixes-miscellaneous-v9-sep/*.patch .;
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/fixes-miscellaneous-v11-sep/*.patch .;
     patch -p1 < ./0001-net-sched-allow-configuring-cake-qdisc-as-default.patch;
     patch -p1 < ./0002-infiniband-Fix-__read_overflow2-error-with-O3-inlini.patch;
     patch -p1 < ./0003-pci-Enable-overrides-for-missing-ACS-capabilities.patch;
@@ -346,9 +345,12 @@ elif [ ${KERNEL_BASE_VER} == "5.17" ]; then # Latest mainline
     patch -p1 < ./0020-cpufreq-intel_pstate-Handle-no_turbo-in-frequency-in.patch;
     patch -p1 < ./0021-xfs-fix-soft-lockup-via-spinning-in-filestream-ag-se.patch;
     patch -p1 < ./0022-xfs-convert-buffer-flags-to-unsigned.patch;
-    patch -p1 < ./0023-net-atlantic-always-deep-reset-on-pm-op-fixing-null-.patch;
+    patch -p1 < ./0023-net-atlantic-fix-frag-0-not-initialized.patch;
+    patch -p1 < ./0024-net-atlantic-reduce-scope-of-is_rsc_complete.patch;
+    patch -p1 < ./0025-net-atlantic-add-check-for-MAX_SKB_FRAGS.patch;
+    patch -p1 < ./0026-net-atlantic-verify-hw_head_-lies-within-TX-buffer-r.patch;
     echo "*** Copying and applying hwmon patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/hwmon-patches-v6/*.patch .;
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/hwmon-patches-v7/*.patch .;
     patch -p1 < ./0001-hwmon-5.17-patches.patch;
     echo "*** Copying and applying lqx patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/lqx-patches/*.patch .;
@@ -1575,11 +1577,11 @@ if [ ${KERNEL_SCHEDULER} == "cacule" ] && [ "${KERNEL_TYPE}" != "rt" ]; then
 fi
 
 # Examples:
-# 5.17.7-051707+customidle-generic
-# 5.17.7-051707+customfull-generic
-# 5.17.7-051707+customrt-generic
+# 5.17.8-051708+customidle-generic
+# 5.17.8-051708+customfull-generic
+# 5.17.8-051708+customrt-generic
 # Note: A hyphen between label and type (e.g. customidle -> custom-idle) causes problems with some parsers
-# Because the final version name becomes: 5.17.7-051707+custom-idle-generic, so just keep it combined
+# Because the final version name becomes: 5.17.8-051708+custom-idle-generic, so just keep it combined
 echo "*** Updating version in changelog (necessary for Ubuntu)... ✓";
 sed -i "s/${KERNEL_SUB_VER}/${KERNEL_SUB_VER}+${KERNEL_VERSION_LABEL}${KERNEL_TYPE}/g" ./debian.master/changelog;
 
@@ -1733,7 +1735,7 @@ echo "*** Finished installing kernel, cleaning up build directory... ✓";
 rm -rf ${KERNEL_BUILD_DIR};
 
 # To list your installed kernels: sudo update-grub2
-# To uninstall a kernel: sudo apt purge *5.17.7-051707+customidle-generic*
+# To uninstall a kernel: sudo apt purge *5.17.8-051708+customidle-generic*
 # Also, keep an eye out for the directories below as they build up over time.
 echo "ls -alh /usr/src"
 ls -alh /usr/src;
