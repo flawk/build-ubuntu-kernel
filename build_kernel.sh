@@ -5,8 +5,8 @@
 set -euo pipefail
 
 KERNEL_BASE_VER=${KERNEL_BASE_VER:-"5.18"}
-KERNEL_PATCH_VER=${KERNEL_PATCH_VER:-"5.18.2"}
-KERNEL_SUB_VER=${KERNEL_SUB_VER:-"051802"}
+KERNEL_PATCH_VER=${KERNEL_PATCH_VER:-"5.18.3"}
+KERNEL_SUB_VER=${KERNEL_SUB_VER:-"051803"}
 KERNEL_TYPE=${KERNEL_TYPE:-"idle"}
 KERNEL_SCHEDULER=${KERNEL_SCHEDULER:-"cfs"}
 KERNEL_VERSION_LABEL=${KERNEL_VERSION_LABEL:-"custom"}
@@ -211,7 +211,7 @@ fi
 
 if [ ${KERNEL_BASE_VER} == "5.18" ]; then   # Latest mainline
     echo "*** Copying and applying amd patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/amd-patches/*.patch .;
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/amd-patches-v2/*.patch .;
     patch -p1 < ./0001-amd-patches.patch;
     echo "*** Copying and applying arch patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/arch-patches/*.patch .;
@@ -223,10 +223,10 @@ if [ ${KERNEL_BASE_VER} == "5.18" ]; then   # Latest mainline
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/bbr2-patches-v2/*.patch .;
     patch -p1 < ./0001-bbr2-5.18-introduce-BBRv2.patch;
     echo "*** Copying and applying blk patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/blk-patches-v3/*.patch .;
-    patch -p1 < ./0001-blk-patches.patch;
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/blk-patches-v4/*.patch .;
+    patch -p1 < ./0001-blk-mq-introduce-Ming-Lei-s-patch-from-mailing-list.patch;
     echo "*** Copying and applying btrfs patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/btrfs-patches-v3/*.patch .;
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/btrfs-patches-v4/*.patch .;
     patch -p1 < ./0001-btrfs-patches.patch;
     echo "*** Copying and applying clearlinux patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/clearlinux-patches-v5/*.patch .;
@@ -238,7 +238,7 @@ if [ ${KERNEL_BASE_VER} == "5.18" ]; then   # Latest mainline
     patch -p1 < ./0003-init-Kconfig-add-O1-flag.patch;
     patch -p1 < ./0004-Makefile-Turn-off-loop-vectorization-for-GCC-O3-opti.patch;
     echo "*** Copying and applying fixes misc patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/fixes-miscellaneous-v13-sep/*.patch .;
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/fixes-miscellaneous-v16-sep/*.patch .;
     patch -p1 < ./0001-net-sched-allow-configuring-cake-qdisc-as-default.patch;
     patch -p1 < ./0002-infiniband-Fix-__read_overflow2-error-with-O3-inlini.patch;
     patch -p1 < ./0003-pci-Enable-overrides-for-missing-ACS-capabilities.patch;
@@ -266,19 +266,16 @@ if [ ${KERNEL_BASE_VER} == "5.18" ]; then   # Latest mainline
     patch -p1 < ./0026-Revert-pci-Enable-overrides-for-missing-ACS-capabili.patch;
     patch -p1 < ./0027-Revert-openrgb-Deduplicate-piix4-setup-for-HUDSON2-K.patch;
     patch -p1 < ./0028-Revert-i2c-busses-Add-SMBus-capability-to-work-with-.patch;
-    patch -p1 < ./0029-net-sched-fixed-barrier-to-prevent-skbuff-sticking-i.patch;
-    patch -p1 < ./0030-writeback-Fix-inode-i_io_list-not-be-protected-by-in.patch;
-    patch -p1 < ./0031-xfs-fix-xfs_ifree-error-handling-to-not-leak-perag-r.patch;
-    patch -p1 < ./0032-sched-autogroup-Fix-sysctl-move.patch;
-    patch -p1 < ./0033-sched-Fix-the-check-of-nr_running-at-queue-wakelist.patch;
-    patch -p1 < ./0034-sched-Remove-the-limitation-of-WF_ON_CPU-on-wakelist.patch;
-    patch -p1 < ./0035-mm-lru_cache_disable-use-synchronize_rcu_expedited.patch;
-    patch -p1 < ./0036-net-sched-add-barrier-to-fix-packet-stuck-problem-fo.patch;
+    patch -p1 < ./0029-xfs-fix-xfs_ifree-error-handling-to-not-leak-perag-r.patch;
+    patch -p1 < ./0030-sched-Fix-the-check-of-nr_running-at-queue-wakelist.patch;
+    patch -p1 < ./0031-sched-Remove-the-limitation-of-WF_ON_CPU-on-wakelist.patch;
+    patch -p1 < ./0032-mm-lru_cache_disable-use-synchronize_rcu_expedited.patch;
+    patch -p1 < ./0033-Revert-nvme-pci-add-quirks-for-Samsung-X5-SSDs.patch;
     echo "*** Copying and applying futex patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/futex-patches/*.patch .;
     patch -p1 < ./0001-futex-Add-entry-point-for-FUTEX_WAIT_MULTIPLE-opcode.patch;
     echo "*** Copying and applying hwmon patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/hwmon-patches/*.patch .;
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/hwmon-patches-v3/*.patch .;
     patch -p1 < ./0001-hwmon-5.18-patches.patch;
     echo "*** Copying and applying kbuild patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/kbuild-patches/*.patch .;
@@ -287,11 +284,8 @@ if [ ${KERNEL_BASE_VER} == "5.18" ]; then   # Latest mainline
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/lqx-patches/*.patch .;
     patch -p1 < ./0001-lqx-patches.patch;
     echo "*** Copying and applying lrng patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/lrng-patches-v4/*.patch .;
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/lrng-patches-v5/*.patch .;
     patch -p1 < ./0001-lrng-patches.patch;
-    echo "*** Copying and applying ntfs patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/ntfs3-patches/*.patch .;
-    patch -p1 < ./0001-ntfs3-5.18-provide-block_invalidate_folio-to-fix-mem.patch;
     echo "*** Copying and applying pci patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/pci-patches/*.patch .;
     patch -p1 < ./0001-pci-5.18-Allow-BAR-movement-during-boot-and-hotplug.patch;
@@ -1596,11 +1590,11 @@ if [ ${KERNEL_SCHEDULER} == "cacule" ] && [ "${KERNEL_TYPE}" != "rt" ]; then
 fi
 
 # Examples:
-# 5.18.2-051802+customidle-generic
-# 5.18.2-051802+customfull-generic
-# 5.18.2-051802+customrt-generic
+# 5.18.3-051803+customidle-generic
+# 5.18.3-051803+customfull-generic
+# 5.18.3-051803+customrt-generic
 # Note: A hyphen between label and type (e.g. customidle -> custom-idle) causes problems with some parsers
-# Because the final version name becomes: 5.18.2-051802+custom-idle-generic, so just keep it combined
+# Because the final version name becomes: 5.18.3-051803+custom-idle-generic, so just keep it combined
 echo "*** Updating version in changelog (necessary for Ubuntu)... ✓";
 sed -i "s/${KERNEL_SUB_VER}/${KERNEL_SUB_VER}+${KERNEL_VERSION_LABEL}${KERNEL_TYPE}/g" ./debian.master/changelog;
 
@@ -1754,7 +1748,7 @@ echo "*** Finished installing kernel, cleaning up build directory... ✓";
 rm -rf ${KERNEL_BUILD_DIR};
 
 # To list your installed kernels: sudo update-grub2
-# To uninstall a kernel: sudo apt purge *5.18.2-051802+customidle-generic*
+# To uninstall a kernel: sudo apt purge *5.18.3-051803+customidle-generic*
 # Also, keep an eye out for the directories below as they build up over time.
 echo "ls -alh /usr/src"
 ls -alh /usr/src;
