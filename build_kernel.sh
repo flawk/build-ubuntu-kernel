@@ -5,8 +5,8 @@
 set -euo pipefail
 
 KERNEL_BASE_VER=${KERNEL_BASE_VER:-"5.18"}
-KERNEL_PATCH_VER=${KERNEL_PATCH_VER:-"5.18.6"}
-KERNEL_SUB_VER=${KERNEL_SUB_VER:-"051806"}
+KERNEL_PATCH_VER=${KERNEL_PATCH_VER:-"5.18.7"}
+KERNEL_SUB_VER=${KERNEL_SUB_VER:-"051807"}
 KERNEL_TYPE=${KERNEL_TYPE:-"idle"}
 KERNEL_SCHEDULER=${KERNEL_SCHEDULER:-"cfs"}
 KERNEL_VERSION_LABEL=${KERNEL_VERSION_LABEL:-"custom"}
@@ -223,7 +223,7 @@ if [ ${KERNEL_BASE_VER} == "5.18" ]; then   # Latest mainline
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/bbr2-patches-v2/*.patch .;
     patch -p1 < ./0001-bbr2-5.18-introduce-BBRv2.patch;
     echo "*** Copying and applying btrfs patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/btrfs-patches-v11/*.patch .;
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/btrfs-patches-v13/*.patch .;
     patch -p1 < ./0001-btrfs-patches.patch;
     echo "*** Copying and applying clearlinux patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/clearlinux-patches-v5/*.patch .;
@@ -235,44 +235,42 @@ if [ ${KERNEL_BASE_VER} == "5.18" ]; then   # Latest mainline
     patch -p1 < ./0003-init-Kconfig-add-O1-flag.patch;
     patch -p1 < ./0004-Makefile-Turn-off-loop-vectorization-for-GCC-O3-opti.patch;
     echo "*** Copying and applying fixes misc patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/fixes-miscellaneous-v24-sep/*.patch .;
-    patch -p1 < ./0001-net-sched-allow-configuring-cake-qdisc-as-default.patch
-    patch -p1 < ./0002-infiniband-Fix-__read_overflow2-error-with-O3-inlini.patch
-    patch -p1 < ./0003-pci-Enable-overrides-for-missing-ACS-capabilities.patch
-    patch -p1 < ./0004-scsi-sd-Optimal-I-O-size-should-be-a-multiple-of-rep.patch
-    patch -p1 < ./0006-i2c-busses-Add-SMBus-capability-to-work-with-OpenRGB.patch
-    patch -p1 < ./0007-fm-5.18-port-mm-kswapd-patches.patch
-    patch -p1 < ./0008-Disable-stack-conservation-for-GCC.patch
-    patch -p1 < ./0009-openrgb-Deduplicate-piix4-setup-for-HUDSON2-KERNCZ-S.patch
-    patch -p1 < ./0010-kernel-cpu.c-fix-init_cpu_online.patch
-    patch -p1 < ./0011-cpufreq-intel_pstate-Handle-no_turbo-in-frequency-in.patch
-    patch -p1 < ./0012-preempt-dynamic-Introduce-preemption-model-accessors.patch
-    patch -p1 < ./0013-kcsan-Use-preemption-model-accessors.patch
-    patch -p1 < ./0014-ftrace-Use-preemption-model-accessors-for-trace-head.patch
-    patch -p1 < ./0015-igb-Convert-kmap-to-kmap_local_page.patch
-    patch -p1 < ./0016-ACPICA-Headers-Replace-zero-length-array-with-flexib.patch
-    patch -p1 < ./0017-iwlwifi-fw-Replace-zero-length-arrays-with-flexible-.patch
-    patch -p1 < ./0018-iwlwifi-mei-Replace-zero-length-array-with-flexible-.patch
-    patch -p1 < ./0019-workqueue-Restrict-kworker-in-the-offline-CPU-pool-r.patch
-    patch -p1 < ./0020-sched-Reverse-sched_class-layout.patch
-    patch -p1 < ./0021-net-atlantic-Avoid-out-of-bounds-indexing.patch
-    patch -p1 < ./0022-xfs-fix-soft-lockup-via-spinning-in-filestream-ag-se.patch
-    patch -p1 < ./0023-lkdtm-heap-Hide-allocation-size-from-Warray-bounds.patch
-    patch -p1 < ./0024-Revert-pci-Enable-overrides-for-missing-ACS-capabili.patch
-    patch -p1 < ./0025-Revert-openrgb-Deduplicate-piix4-setup-for-HUDSON2-K.patch
-    patch -p1 < ./0026-Revert-i2c-busses-Add-SMBus-capability-to-work-with-.patch
-    patch -p1 < ./0027-xfs-fix-xfs_ifree-error-handling-to-not-leak-perag-r.patch
-    patch -p1 < ./0028-sched-Fix-the-check-of-nr_running-at-queue-wakelist.patch
-    patch -p1 < ./0029-sched-Remove-the-limitation-of-WF_ON_CPU-on-wakelist.patch
-    patch -p1 < ./0030-mm-lru_cache_disable-use-synchronize_rcu_expedited.patch
-    patch -p1 < ./0031-Revert-nvme-pci-add-quirks-for-Samsung-X5-SSDs.patch
-    patch -p1 < ./0032-KVM-x86-Grab-regs_dirty-in-local-unsigned-long.patch
-    patch -p1 < ./0033-KVM-x86-Harden-_regs-accesses-to-guard-against-buggy.patch
-    patch -p1 < ./0034-platform-x86-thinkpad_acpi-Fix-a-memory-leak-of-EFCH.patch
-    patch -p1 < ./0035-i2c-piix4-Fix-a-memory-leak-in-the-EFCH-MMIO-support.patch
-    patch -p1 < ./0036-watchdog-sp5100_tco-Fix-a-memory-leak-of-EFCH-MMIO-r.patch
-    patch -p1 < ./0037-xfs-bound-maximum-wait-time-for-inodegc-work.patch
-    patch -p1 < ./0038-xfs-introduce-xfs_inodegc_push.patch
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/fixes-miscellaneous-v26-sep/*.patch .;
+    patch -p1 < ./0001-net-sched-allow-configuring-cake-qdisc-as-default.patch;
+    patch -p1 < ./0002-infiniband-Fix-__read_overflow2-error-with-O3-inlini.patch;
+    patch -p1 < ./0003-pci-Enable-overrides-for-missing-ACS-capabilities.patch;
+    patch -p1 < ./0004-scsi-sd-Optimal-I-O-size-should-be-a-multiple-of-rep.patch;
+    patch -p1 < ./0006-i2c-busses-Add-SMBus-capability-to-work-with-OpenRGB.patch;
+    patch -p1 < ./0007-fm-5.18-port-mm-kswapd-patches.patch;
+    patch -p1 < ./0008-Disable-stack-conservation-for-GCC.patch;
+    patch -p1 < ./0009-openrgb-Deduplicate-piix4-setup-for-HUDSON2-KERNCZ-S.patch;
+    patch -p1 < ./0010-kernel-cpu.c-fix-init_cpu_online.patch;
+    patch -p1 < ./0011-cpufreq-intel_pstate-Handle-no_turbo-in-frequency-in.patch;
+    patch -p1 < ./0012-preempt-dynamic-Introduce-preemption-model-accessors.patch;
+    patch -p1 < ./0013-kcsan-Use-preemption-model-accessors.patch;
+    patch -p1 < ./0014-ftrace-Use-preemption-model-accessors-for-trace-head.patch;
+    patch -p1 < ./0015-igb-Convert-kmap-to-kmap_local_page.patch;
+    patch -p1 < ./0016-ACPICA-Headers-Replace-zero-length-array-with-flexib.patch;
+    patch -p1 < ./0017-iwlwifi-fw-Replace-zero-length-arrays-with-flexible-.patch;
+    patch -p1 < ./0018-iwlwifi-mei-Replace-zero-length-array-with-flexible-.patch;
+    patch -p1 < ./0019-workqueue-Restrict-kworker-in-the-offline-CPU-pool-r.patch;
+    patch -p1 < ./0020-sched-Reverse-sched_class-layout.patch;
+    patch -p1 < ./0021-net-atlantic-Avoid-out-of-bounds-indexing.patch;
+    patch -p1 < ./0022-xfs-fix-soft-lockup-via-spinning-in-filestream-ag-se.patch;
+    patch -p1 < ./0023-lkdtm-heap-Hide-allocation-size-from-Warray-bounds.patch;
+    patch -p1 < ./0024-Revert-pci-Enable-overrides-for-missing-ACS-capabili.patch;
+    patch -p1 < ./0025-Revert-openrgb-Deduplicate-piix4-setup-for-HUDSON2-K.patch;
+    patch -p1 < ./0026-Revert-i2c-busses-Add-SMBus-capability-to-work-with-.patch;
+    patch -p1 < ./0027-xfs-fix-xfs_ifree-error-handling-to-not-leak-perag-r.patch;
+    patch -p1 < ./0028-sched-Fix-the-check-of-nr_running-at-queue-wakelist.patch;
+    patch -p1 < ./0029-sched-Remove-the-limitation-of-WF_ON_CPU-on-wakelist.patch;
+    patch -p1 < ./0030-KVM-x86-Grab-regs_dirty-in-local-unsigned-long.patch;
+    patch -p1 < ./0031-KVM-x86-Harden-_regs-accesses-to-guard-against-buggy.patch;
+    patch -p1 < ./0032-platform-x86-thinkpad_acpi-Fix-a-memory-leak-of-EFCH.patch;
+    patch -p1 < ./0033-i2c-piix4-Fix-a-memory-leak-in-the-EFCH-MMIO-support.patch;
+    patch -p1 < ./0034-watchdog-sp5100_tco-Fix-a-memory-leak-of-EFCH-MMIO-r.patch;
+    patch -p1 < ./0035-xfs-bound-maximum-wait-time-for-inodegc-work.patch;
+    patch -p1 < ./0036-xfs-introduce-xfs_inodegc_push.patch;
     echo "*** Copying and applying futex patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/futex-patches/*.patch .;
     patch -p1 < ./0001-futex-Add-entry-point-for-FUTEX_WAIT_MULTIPLE-opcode.patch;
@@ -286,7 +284,7 @@ if [ ${KERNEL_BASE_VER} == "5.18" ]; then   # Latest mainline
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/lqx-patches/*.patch .;
     patch -p1 < ./0001-lqx-patches.patch;
     echo "*** Copying and applying lrng patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/lrng-patches-v7/*.patch .;
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/lrng-patches-v11/*.patch .;
     patch -p1 < ./0001-lrng-patches.patch;
     echo "*** Copying and applying pci patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/pci-patches/*.patch .;
@@ -1592,11 +1590,11 @@ if [ ${KERNEL_SCHEDULER} == "cacule" ] && [ "${KERNEL_TYPE}" != "rt" ]; then
 fi
 
 # Examples:
-# 5.18.6-051806+customidle-generic
-# 5.18.6-051806+customfull-generic
-# 5.18.6-051806+customrt-generic
+# 5.18.7-051807+customidle-generic
+# 5.18.7-051807+customfull-generic
+# 5.18.7-051807+customrt-generic
 # Note: A hyphen between label and type (e.g. customidle -> custom-idle) causes problems with some parsers
-# Because the final version name becomes: 5.18.6-051806+custom-idle-generic, so just keep it combined
+# Because the final version name becomes: 5.18.7-051807+custom-idle-generic, so just keep it combined
 echo "*** Updating version in changelog (necessary for Ubuntu)... ✓";
 sed -i "s/${KERNEL_SUB_VER}/${KERNEL_SUB_VER}+${KERNEL_VERSION_LABEL}${KERNEL_TYPE}/g" ./debian.master/changelog;
 
@@ -1750,7 +1748,7 @@ echo "*** Finished installing kernel, cleaning up build directory... ✓";
 rm -rf ${KERNEL_BUILD_DIR};
 
 # To list your installed kernels: sudo update-grub2
-# To uninstall a kernel: sudo apt purge *5.18.6-051806+customidle-generic*
+# To uninstall a kernel: sudo apt purge *5.18.7-051807+customidle-generic*
 # Also, keep an eye out for the directories below as they build up over time.
 echo "ls -alh /usr/src"
 ls -alh /usr/src;
