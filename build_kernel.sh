@@ -320,8 +320,8 @@ if [ ${KERNEL_BASE_VER} == "5.18" ]; then   # Latest mainline
     patch -p1 < ./0009-XANMOD-scripts-disable-the-localversion-tag-of-a-git.patch;
     patch -p1 < ./0010-XANMOD-lib-kconfig.debug-disable-default-CONFIG_SYMB.patch;
     echo "*** Copying and applying fixes misc patches.. ✓";
-    cp -v ${CUSTOM_PATCH_PATH}/fixes/${KERNEL_BASE_VER}/2-perf-compile-bfd.patch .;
-    patch -p1 < ./2-perf-compile-bfd.patch;
+    cp -v ${CUSTOM_PATCH_PATH}/fixes/${KERNEL_BASE_VER}/tools-fix-compilation-failure-caused-by-init_disassemble_info-API-changes.patch .;
+    patch -p1 < ./tools-fix-compilation-failure-caused-by-init_disassemble_info-API-changes.patch;
     echo "*** Copying and applying disable memory compaction patch.. ✓";
     cp -v ${CUSTOM_PATCH_PATH}/tweaks/5.13-disable-compaction-on-unevictable-pages.patch .;
     patch -p1 < ./5.13-disable-compaction-on-unevictable-pages.patch;
