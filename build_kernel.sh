@@ -4,9 +4,9 @@
 
 set -euo pipefail
 
-KERNEL_BASE_VER=${KERNEL_BASE_VER:-"5.18"}
-KERNEL_PATCH_VER=${KERNEL_PATCH_VER:-"5.18.7"}
-KERNEL_SUB_VER=${KERNEL_SUB_VER:-"051807"}
+KERNEL_BASE_VER=${KERNEL_BASE_VER:-"5.19"}
+KERNEL_PATCH_VER=${KERNEL_PATCH_VER:-"5.19.1"}
+KERNEL_SUB_VER=${KERNEL_SUB_VER:-"051901"}
 KERNEL_TYPE=${KERNEL_TYPE:-"idle"}
 KERNEL_SCHEDULER=${KERNEL_SCHEDULER:-"cfs"}
 KERNEL_VERSION_LABEL=${KERNEL_VERSION_LABEL:-"custom"}
@@ -182,7 +182,10 @@ fi
 # https://mirrors.edge.kernel.org/pub/linux/kernel/projects/rt
 if [ ${KERNEL_TYPE} == "rt" ]; then
     echo "*** Copying and applying rt patches... ✓";
-    if [ ${KERNEL_BASE_VER} == "5.18" ]; then
+    if [ ${KERNEL_BASE_VER} == "5.19" ]; then
+        cp -v ${CUSTOM_PATCH_PATH}/rt/${KERNEL_BASE_VER}/patch-5.19-rt10.patch .;
+        patch -p1 < ./patch-5.19-rt10.patch;
+    elif [ ${KERNEL_BASE_VER} == "5.18" ]; then
         cp -v ${CUSTOM_PATCH_PATH}/rt/${KERNEL_BASE_VER}/patch-5.18-rt11.patch .;
         patch -p1 < ./patch-5.18-rt11.patch;
     elif [ ${KERNEL_BASE_VER} == "5.17" ]; then
@@ -209,22 +212,86 @@ if [ ${KERNEL_TYPE} == "rt" ]; then
     fi
 fi
 
-if [ ${KERNEL_BASE_VER} == "5.18" ]; then   # Latest mainline
-    echo "*** Copying and applying amd patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/amd-patches-v2/*.patch .;
-    patch -p1 < ./0001-amd-patches.patch;
+if [ ${KERNEL_BASE_VER} == "5.19" ]; then   # Latest mainline
     echo "*** Copying and applying arch patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/arch-patches/*.patch .;
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/arch-patches-v2/*.patch .;
+    echo "*** Copying and applying aufs patches.. ✓";
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/aufs-patches/*.patch .;
+    patch -p1 < ./0001-aufs-5.19-merge-v20220808.patch;
+    echo "*** Copying and applying bfq misc patches.. ✓";
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/bfq-misc-patches/*.patch .;
+    patch -p1 < ./0001-bfq-misc-patches.patch;
+    echo "*** Copying and applying bitmap patches.. ✓";
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/bitmap-patches/*.patch .;
+    patch -p1 < ./0001-bitmap-5.19-merge-changes-from-dev-tree.patch;
+    echo "*** Copying and applying boot patches.. ✓";
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/boot-patches/*.patch .;
+    patch -p1 < ./0001-boot-patches.patch;
+    echo "*** Copying and applying esdm patches.. ✓";
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/esdm-patches/*.patch .;
+    patch -p1 < ./0001-esdm-5.19-introduce-Entropy-Source-and-DRNG-Manager.patch;
+    echo "*** Copying and applying folio patches.. ✓";
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/folio-patches/*.patch .;
+    patch -p1 < ./0001-folio-5.19-merge-changes-from-dev-tree.patch;
+    echo "*** Copying and applying fixes misc patches.. ✓";
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/fixes-miscellaneous/*.patch .;
+    patch -p1 < ./0001-fixes-miscellaneous.patch;
+    echo "*** Copying and applying kbuild patches.. ✓";
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/kbuild-patches/*.patch .;
+    patch -p1 < ./0001-kbuild-patches.patch;
+    echo "*** Copying and applying ksmbd patches.. ✓";
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/ksmbd-patches/*.patch .;
+    patch -p1 < ./0001-ksmbd-patches.patch;
+    echo "*** Copying and applying mm patches.. ✓";
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/mm-patches/*.patch .;
+    patch -p1 < ./0001-mm-vmscan-fix-extreme-overreclaim-and-swap-floods.patch;
+    echo "*** Copying and applying modules patches.. ✓";
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/modules-patches/*.patch .;
+    patch -p1 < ./0001-modules-patches.patch;
+    echo "*** Copying and applying sched patches.. ✓";
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/sched-patches/*.patch .;
+    patch -p1 < ./0001-sched-cputime-Fix-the-bug-of-reading-time-backward-f.patch;
+    echo "*** Copying and applying spadfs patches.. ✓";
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/spadfs-patches/*.patch .;
+    patch -p1 < ./0001-spadfs-5.19-merge-v1.0.16.patch;
+    echo "*** Copying and applying squashfs patches.. ✓";
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/squashfs-patches/*.patch .;
+    patch -p1 < ./0001-squashfs-patches.patch;
+    echo "*** Copying and applying v4l2loopback-patches.. ✓";
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/v4l2loopback-patches/*.patch .;
+    patch -p1 < ./0001-v4l2loopback-patches.patch;
+    echo "*** Copying and applying x86 patches.. ✓";
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/x86-patches/*.patch .;
+    patch -p1 < ./0001-x86-patches.patch;
+    echo "*** Copying and applying misc xanmod tweaks.. ✓";
+    cp -v ${XANMOD_PATCH_PATH}/linux-5.18.y-xanmod/xanmod/*.patch .;
+    patch -p1 < ./0009-XANMOD-mm-vmscan-vm_swappiness-30-decreases-the-amou.patch;
+    patch -p1 < ./0010-XANMOD-cpufreq-tunes-ondemand-and-conservative-gover.patch;
+    patch -p1 < ./0011-XANMOD-scripts-setlocalversion-remove-tag-for-git-re.patch;
+    patch -p1 < ./0012-XANMOD-lib-kconfig.debug-disable-default-CONFIG_SYMB.patch;
+    echo "*** Copying and applying lucjan's zen patches.. ✓";
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/zen-patches/*.patch .;
+    patch -p1 < ./0001-zen-patches.patch;
+    echo "*** Copying and applying zstd patches.. ✓";
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/zstd-modules-patches/*.patch .;
+    patch -p1 < ./0001-kbuild-modules-5.19-allow-setting-zstd-compression-l.patch;
+elif [ ${KERNEL_BASE_VER} == "5.18" ]; then # Latest stable
+    echo "*** Copying and applying amd p-state patches.. ✓";
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/amd-pstate-patches-v2/*.patch .;
+    patch -p1 < ./0001-amd-5.18-amd-pstate-enhancement-and-issue-fixs.patch;
+    echo "*** Copying and applying arch patches.. ✓";
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/arch-patches-v4-sep/*.patch .;
     patch -p1 < ./0001-ZEN-Add-sysctl-and-CONFIG-to-disallow-unprivileged-C.patch;
+    patch -p1 < ./0002-HID-apple-Properly-handle-function-keys-on-Keychron-.patch;
+    patch -p1 < ./0003-soundwire-Raise-DEFAULT_PROBE_TIMEOUT-to-10000-ms.patch;
+    patch -p1 < ./0004-drm-i915-psr-Use-full-update-In-case-of-area-calcula.patch;
+    patch -p1 < ./0005-drm-i915-Ensure-damage-clip-area-is-within-pipe-area.patch;
     echo "*** Copying and applying aufs patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/aufs-patches/*.patch .;
     patch -p1 < ./0001-aufs-20220620.patch;
-    echo "*** Copying and applying bbr2 patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/bbr2-patches-v2/*.patch .;
-    patch -p1 < ./0001-bbr2-5.18-introduce-BBRv2.patch;
-    echo "*** Copying and applying btrfs patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/btrfs-patches-v13/*.patch .;
-    patch -p1 < ./0001-btrfs-patches.patch;
+    echo "*** Copying and applying blk patches.. ✓";
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/blk-patches-v7/*.patch .;
+    patch -p1 < ./0001-blk-patches.patch;
     echo "*** Copying and applying clearlinux patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/clearlinux-patches-v5/*.patch .;
     patch -p1 < ./0001-clearlinux-patches.patch;
@@ -235,7 +302,7 @@ if [ ${KERNEL_BASE_VER} == "5.18" ]; then   # Latest mainline
     patch -p1 < ./0003-init-Kconfig-add-O1-flag.patch;
     patch -p1 < ./0004-Makefile-Turn-off-loop-vectorization-for-GCC-O3-opti.patch;
     echo "*** Copying and applying fixes misc patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/fixes-miscellaneous-v26-sep/*.patch .;
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/fixes-miscellaneous-v34-sep/*.patch .;
     patch -p1 < ./0001-net-sched-allow-configuring-cake-qdisc-as-default.patch;
     patch -p1 < ./0002-infiniband-Fix-__read_overflow2-error-with-O3-inlini.patch;
     patch -p1 < ./0003-pci-Enable-overrides-for-missing-ACS-capabilities.patch;
@@ -266,25 +333,22 @@ if [ ${KERNEL_BASE_VER} == "5.18" ]; then   # Latest mainline
     patch -p1 < ./0029-sched-Remove-the-limitation-of-WF_ON_CPU-on-wakelist.patch;
     patch -p1 < ./0030-KVM-x86-Grab-regs_dirty-in-local-unsigned-long.patch;
     patch -p1 < ./0031-KVM-x86-Harden-_regs-accesses-to-guard-against-buggy.patch;
-    patch -p1 < ./0032-platform-x86-thinkpad_acpi-Fix-a-memory-leak-of-EFCH.patch;
-    patch -p1 < ./0033-i2c-piix4-Fix-a-memory-leak-in-the-EFCH-MMIO-support.patch;
-    patch -p1 < ./0034-watchdog-sp5100_tco-Fix-a-memory-leak-of-EFCH-MMIO-r.patch;
-    patch -p1 < ./0035-xfs-bound-maximum-wait-time-for-inodegc-work.patch;
-    patch -p1 < ./0036-xfs-introduce-xfs_inodegc_push.patch;
+    patch -p1 < ./0032-watchdog-sp5100_tco-Fix-a-memory-leak-of-EFCH-MMIO-r.patch;
+    patch -p1 < ./0033-xfs-bound-maximum-wait-time-for-inodegc-work.patch;
+    patch -p1 < ./0034-xfs-introduce-xfs_inodegc_push.patch;
+    patch -p1 < ./0035-drm-amdgpu-flush-delete-wq-after-wait-fence.patch;
+    patch -p1 < ./0036-nvme-add-bug-report-info-for-global-duplicate-id.patch;
     echo "*** Copying and applying futex patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/futex-patches/*.patch .;
     patch -p1 < ./0001-futex-Add-entry-point-for-FUTEX_WAIT_MULTIPLE-opcode.patch;
     echo "*** Copying and applying hwmon patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/hwmon-patches-v4/*.patch .;
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/hwmon-patches-v7/*.patch .;
     patch -p1 < ./0001-hwmon-5.18-patches.patch;
-    echo "*** Copying and applying ioprio patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/ioprio-patches/*.patch .;
-    patch -p1 < ./0001-ioprio-patches.patch;
     echo "*** Copying and applying lqx patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/lqx-patches/*.patch .;
     patch -p1 < ./0001-lqx-patches.patch;
     echo "*** Copying and applying lrng patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/lrng-patches-v11/*.patch .;
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/lrng-patches-v13/*.patch .;
     patch -p1 < ./0001-lrng-patches.patch;
     echo "*** Copying and applying pci patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/pci-patches/*.patch .;
@@ -314,11 +378,11 @@ if [ ${KERNEL_BASE_VER} == "5.18" ]; then   # Latest mainline
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/zen-patches/*.patch .;
     patch -p1 < ./0001-zen-patches.patch;
     echo "*** Copying and applying misc xanmod tweaks.. ✓";
-    cp -v ${XANMOD_PATCH_PATH}/linux-5.17.y-xanmod/xanmod/*.patch .;
-    patch -p1 < ./0007-XANMOD-mm-vmscan-vm_swappiness-30-decreases-the-amou.patch;
-    patch -p1 < ./0008-XANMOD-cpufreq-tunes-ondemand-and-conservative-gover.patch;
-    patch -p1 < ./0009-XANMOD-scripts-disable-the-localversion-tag-of-a-git.patch;
-    patch -p1 < ./0010-XANMOD-lib-kconfig.debug-disable-default-CONFIG_SYMB.patch;
+    cp -v ${XANMOD_PATCH_PATH}/linux-5.18.y-xanmod/xanmod/*.patch .;
+    patch -p1 < ./0009-XANMOD-mm-vmscan-vm_swappiness-30-decreases-the-amou.patch;
+    patch -p1 < ./0010-XANMOD-cpufreq-tunes-ondemand-and-conservative-gover.patch;
+    patch -p1 < ./0011-XANMOD-scripts-setlocalversion-remove-tag-for-git-re.patch;
+    patch -p1 < ./0012-XANMOD-lib-kconfig.debug-disable-default-CONFIG_SYMB.patch;
     echo "*** Copying and applying fixes misc patches.. ✓";
     cp -v ${CUSTOM_PATCH_PATH}/fixes/${KERNEL_BASE_VER}/tools-fix-compilation-failure-caused-by-init_disassemble_info-API-changes.patch .;
     patch -p1 < ./tools-fix-compilation-failure-caused-by-init_disassemble_info-API-changes.patch;
@@ -348,11 +412,8 @@ if [ ${KERNEL_BASE_VER} == "5.18" ]; then   # Latest mainline
         patch -p1 < ./0005-XANMOD-Change-rcutree.kthread_prio-to-SCHED_RR-polic.patch;
         patch -p1 < ./0006-XANMOD-block-mq-deadline-Disable-front_merges-by-def.patch;
         patch -p1 < ./0007-XANMOD-block-mq-deadline-Increase-write-priority-to-.patch;
-        echo "*** Copying and applying speculative lru patches.. ✓";
-        cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/speculative-lru-pf-patches/*.patch .;
-        patch -p1 < ./0001-spf-5.18-introduce-SPECULATIVE-PAGE-FAULT.patch;
     fi
-elif [ ${KERNEL_BASE_VER} == "5.17" ]; then # Latest stable
+elif [ ${KERNEL_BASE_VER} == "5.17" ]; then # EOL (End of Life, 5.17.15, 06/14/22)
     echo "*** Copying and applying arch patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/arch-patches-v18/*.patch .;
     patch -p1 < ./0001-arch-patches.patch;
@@ -415,11 +476,11 @@ elif [ ${KERNEL_BASE_VER} == "5.17" ]; then # Latest stable
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/zen-patches-v2/*.patch .;
     patch -p1 < ./0001-zen-patches.patch;
     echo "*** Copying and applying misc xanmod tweaks.. ✓";
-    cp -v ${XANMOD_PATCH_PATH}/linux-${KERNEL_BASE_VER}.y-xanmod/xanmod/*.patch .;
-    patch -p1 < ./0007-XANMOD-mm-vmscan-vm_swappiness-30-decreases-the-amou.patch;
-    patch -p1 < ./0008-XANMOD-cpufreq-tunes-ondemand-and-conservative-gover.patch;
-    patch -p1 < ./0009-XANMOD-scripts-disable-the-localversion-tag-of-a-git.patch;
-    patch -p1 < ./0010-XANMOD-lib-kconfig.debug-disable-default-CONFIG_SYMB.patch;
+    cp -v ${XANMOD_PATCH_PATH}/linux-5.18.y-xanmod/xanmod/*.patch .;
+    patch -p1 < ./0009-XANMOD-mm-vmscan-vm_swappiness-30-decreases-the-amou.patch;
+    patch -p1 < ./0010-XANMOD-cpufreq-tunes-ondemand-and-conservative-gover.patch;
+    patch -p1 < ./0011-XANMOD-scripts-setlocalversion-remove-tag-for-git-re.patch;
+    patch -p1 < ./0012-XANMOD-lib-kconfig.debug-disable-default-CONFIG_SYMB.patch;
     echo "*** Copying and applying disable memory compaction patch.. ✓";
     cp -v ${CUSTOM_PATCH_PATH}/tweaks/5.13-disable-compaction-on-unevictable-pages.patch .;
     patch -p1 < ./5.13-disable-compaction-on-unevictable-pages.patch;
@@ -628,22 +689,6 @@ elif [ ${KERNEL_BASE_VER} == "5.15" ]; then # LTS kernel, supported until 2027
     patch -p1 < ./0025-don-t-report-an-error-if-PowerClamp-run-on-other-CPU.patch;
     patch -p1 < ./0026-Port-microcode-patches.patch;
     patch -p1 < ./0027-clearlinux-5.15-backport-patches-from-clearlinux-rep.patch;
-    echo "*** Copying and applying cpufreq patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/cpufreq-patches-v7-sep/*.patch .;
-    patch -p1 < ./0001-x86-cpufeatures-add-AMD-Collaborative-Processor-Perf.patch;
-    patch -p1 < ./0002-x86-msr-add-AMD-CPPC-MSR-definitions.patch;
-    patch -p1 < ./0003-ACPI-CPPC-implement-support-for-SystemIO-registers.patch;
-    patch -p1 < ./0005-ACPI-CPPC-add-cppc-enable-register-function.patch;
-    patch -p1 < ./0006-cpufreq-amd-pstate-introduce-a-new-AMD-P-State-drive.patch;
-    patch -p1 < ./0007-cpufreq-amd-pstate-add-fast-switch-function-for-AMD-.patch;
-    patch -p1 < ./0009-cpufreq-amd-pstate-add-trace-for-AMD-P-State-module.patch;
-    patch -p1 < ./0010-cpufreq-amd-pstate-add-boost-mode-support-for-AMD-P-.patch;
-    patch -p1 < ./0011-cpufreq-amd-pstate-add-AMD-P-State-frequencies-attri.patch;
-    patch -p1 < ./0012-cpufreq-amd-pstate-add-AMD-P-State-performance-attri.patch;
-    patch -p1 < ./0013-Documentation-AMD-P-State-add-AMD-P-State-driver-int.patch;
-    patch -p1 < ./0014-MAINTAINERS-add-AMD-P-State-driver-maintainer-entry.patch;
-    patch -p1 < ./0015-amd-pstate-5.15-update-to-v7.patch;
-    patch -p1 < ./0016-amd-pstate-5.15-update-to-next.patch;
     echo "*** Copying an applying graysky patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/cpu-patches-v2-sep/*.patch .;
     patch -p1 < ./0001-cpu-5.15-merge-graysky-s-patchset.patch;
@@ -668,7 +713,6 @@ elif [ ${KERNEL_BASE_VER} == "5.15" ]; then # LTS kernel, supported until 2027
     patch -p1 < ./0015-x86-csum-rewrite-csum_partial.patch;
     patch -p1 < ./0016-x86-csum-Fix-compilation-error-for-UM.patch;
     patch -p1 < ./0017-x86-csum-Fix-initial-seed-for-odd-buffers.patch;
-    patch -p1 < ./0018-xfs-check-sb_meta_uuid-for-dabuf-buffer-recovery.patch;
     echo "*** Copying and applying futex (Valve fsync) patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/futex-zen-patches/*.patch .;
     patch -p1 < ./0001-futex-resync-from-gitlab.collabora.com.patch;
@@ -691,9 +735,6 @@ elif [ ${KERNEL_BASE_VER} == "5.15" ]; then # LTS kernel, supported until 2027
     patch -p1 < ./0001-zen-Allow-MSR-writes-by-default.patch;
     patch -p1 < ./0002-PCI-Add-Intel-remapped-NVMe-device-support.patch;
     patch -p1 < ./0003-Input-evdev-use-call_rcu-when-detaching-client.patch;
-    echo "*** Copying and applying ntfs3 patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/ntfs3-patches-v2/*.patch .;
-    patch -p1 < ./0001-ntfs3-patches.patch;
     echo "*** Copying and applying sbitmap patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/sbitmap-patches-v3/*.patch .;
     patch -p1 < ./0001-sbitmap-patches.patch;
@@ -1126,31 +1167,6 @@ elif [ ${KERNEL_BASE_VER} == "5.10" ]; then # LTS kernel, supported until 2026
     echo "*** Copying and applying arch patches.. ✓";
     cp -v ${CUSTOM_PATCH_PATH}/lucjan/${KERNEL_BASE_VER}/arch-patches-v14/*.patch .;
     patch -p1 < ./0001-arch-patches.patch;
-    echo "*** Copying and applying bfq patches.. ✓";
-    cp -v ${CUSTOM_PATCH_PATH}/lucjan/${KERNEL_BASE_VER}/bfq-patches-v5-sep/*.patch .;
-    patch -p1 < ./0001-block-bfq-use-half-slice_idle-as-a-threshold-to-chec.patch;
-    patch -p1 < ./0002-block-bfq-set-next_rq-to-waker_bfqq-next_rq-in-waker.patch;
-    patch -p1 < ./0003-block-bfq-increase-time-window-for-waker-detection.patch;
-    patch -p1 < ./0004-block-bfq-do-not-raise-non-default-weights.patch;
-    patch -p1 < ./0005-block-bfq-avoid-spurious-switches-to-soft_rt-of-inte.patch;
-    patch -p1 < ./0006-block-bfq-do-not-expire-a-queue-when-it-is-the-only-.patch;
-    patch -p1 < ./0007-block-bfq-replace-mechanism-for-evaluating-I-O-inten.patch;
-    patch -p1 < ./0008-block-bfq-re-evaluate-convenience-of-I-O-plugging-on.patch;
-    patch -p1 < ./0009-block-bfq-fix-switch-back-from-soft-rt-weitgh-raisin.patch;
-    patch -p1 < ./0010-block-bfq-save-also-weight-raised-service-on-queue-m.patch;
-    patch -p1 < ./0011-block-bfq-save-also-injection-state-on-queue-merging.patch;
-    patch -p1 < ./0012-block-bfq-make-waker-queue-detection-more-robust.patch;
-    patch -p1 < ./0013-bfq-bfq_check_waker-should-be-static.patch;
-    patch -p1 < ./0014-block-bfq-always-inject-I-O-of-queues-blocked-by-wak.patch;
-    patch -p1 < ./0015-block-bfq-put-reqs-of-waker-and-woken-in-dispatch-li.patch;
-    patch -p1 < ./0016-block-bfq-make-shared-queues-inherit-wakers.patch;
-    patch -p1 < ./0017-block-bfq-fix-weight-raising-resume-with-low_latency.patch;
-    patch -p1 < ./0018-block-bfq-keep-shared-queues-out-of-the-waker-mechan.patch;
-    patch -p1 < ./0020-bfq-don-t-duplicate-code-for-different-paths.patch;
-    patch -p1 < ./0022-bfq-Use-ttime-local-variable.patch;
-    patch -p1 < ./0023-bfq-Use-only-idle-IO-periods-for-think-time-calculat.patch;
-    patch -p1 < ./0024-bfq-Remove-stale-comment.patch;
-    patch -p1 < ./0025-Revert-bfq-Remove-stale-comment.patch;
     echo "*** Copying and applying block patches.. ✓";
     cp -v ${CUSTOM_PATCH_PATH}/lucjan/${KERNEL_BASE_VER}/block-patches-v3/*.patch .;
     patch -p1 < ./0001-block-patches.patch;
@@ -1228,7 +1244,6 @@ elif [ ${KERNEL_BASE_VER} == "5.10" ]; then # LTS kernel, supported until 2026
     cp -v ${CUSTOM_PATCH_PATH}/lucjan/${KERNEL_BASE_VER}/fixes-miscellaneous-v11-sep/*.patch .;
     patch -p1 < ./0001-net-sched-allow-configuring-cake-qdisc-as-default.patch;
     patch -p1 < ./0002-infiniband-Fix-__read_overflow2-error-with-O3-inlini.patch;
-    patch -p1 < ./0003-kbuild-add-fcf-protection-none-to-retpoline-flags.patch;
     patch -p1 < ./0004-mm-Disable-watermark-boosting-by-default.patch;
     patch -p1 < ./0005-mm-Stop-kswapd-early-when-nothing-s-waiting-for-it-t.patch;
     patch -p1 < ./0006-mm-Fully-disable-watermark-boosting-when-it-isn-t-us.patch;
@@ -1240,13 +1255,6 @@ elif [ ${KERNEL_BASE_VER} == "5.10" ]; then # LTS kernel, supported until 2026
     patch -p1 < ./0014-fs-Break-generic_file_buffered_read-up-into-multiple.patch;
     patch -p1 < ./0015-fs-generic_file_buffered_read-now-uses-find_get_page.patch;
     patch -p1 < ./0016-iomap-avoid-deadlock-if-memory-reclaim-is-triggered-.patch;
-    patch -p1 < ./0017-mm-Add-become_kswapd-and-restore_kswapd.patch;
-    patch -p1 < ./0018-xfs-fix-an-ABBA-deadlock-in-xfs_rename.patch;
-    patch -p1 < ./0019-xfs-use-memalloc_nofs_-save-restore-in-xfs-transacti.patch;
-    patch -p1 < ./0020-xfs-refactor-the-usage-around-xfs_trans_context_-set.patch;
-    patch -p1 < ./0021-xfs-use-current-journal_info-to-avoid-transaction-re.patch;
-    patch -p1 < ./0022-xfs-set-inode-size-after-creating-symlink.patch;
-    patch -p1 < ./0023-xfs-restore-shutdown-check-in-mapped-write-fault-pat.patch;
     echo "*** Copying and applying futex misc patches.. ✓";
     cp -v ${CUSTOM_PATCH_PATH}/lucjan/${KERNEL_BASE_VER}/futex-patches/*.patch .;
     patch -p1 < ./0001-futex-patches.patch;
@@ -1370,47 +1378,6 @@ elif [ ${KERNEL_BASE_VER} == "5.4" ]; then  # LTS kernel, supported until 2025
     cp -v ${CUSTOM_PATCH_PATH}/lucjan/5.7/bfq-patches-v5-sep/*.patch .;
     patch -p1 < ./0001-bfq-Fix-check-detecting-whether-waker-queue-should-b.patch;
     patch -p1 < ./0002-bfq-Allow-short_ttime-queues-to-have-waker.patch;
-    echo "*** Copying and applying BFQ 5.10 patches.. ✓";
-    cp -v ${CUSTOM_PATCH_PATH}/lucjan/5.10/bfq-patches-v5-sep/*.patch .;
-    patch -p1 < ./0003-block-bfq-increase-time-window-for-waker-detection.patch;
-    patch -p1 < ./0004-block-bfq-do-not-raise-non-default-weights.patch;
-    patch -p1 < ./0005-block-bfq-avoid-spurious-switches-to-soft_rt-of-inte.patch;
-    patch -p1 < ./0006-block-bfq-do-not-expire-a-queue-when-it-is-the-only-.patch;
-    patch -p1 < ./0008-block-bfq-re-evaluate-convenience-of-I-O-plugging-on.patch;
-    patch -p1 < ./0009-block-bfq-fix-switch-back-from-soft-rt-weitgh-raisin.patch;
-    patch -p1 < ./0010-block-bfq-save-also-weight-raised-service-on-queue-m.patch;
-    patch -p1 < ./0011-block-bfq-save-also-injection-state-on-queue-merging.patch;
-    patch -p1 < ./0014-block-bfq-always-inject-I-O-of-queues-blocked-by-wak.patch;
-    patch -p1 < ./0015-block-bfq-put-reqs-of-waker-and-woken-in-dispatch-li.patch;
-    patch -p1 < ./0018-block-bfq-keep-shared-queues-out-of-the-waker-mechan.patch;
-    patch -p1 < ./0020-bfq-don-t-duplicate-code-for-different-paths.patch;
-    patch -p1 < ./0022-bfq-Use-ttime-local-variable.patch;
-    patch -p1 < ./0023-bfq-Use-only-idle-IO-periods-for-think-time-calculat.patch;
-    patch -p1 < ./0024-bfq-Remove-stale-comment.patch;
-    patch -p1 < ./0025-Revert-bfq-Remove-stale-comment.patch;
-    echo "*** Copying and applying BFQ 5.11 patches.. ✓";
-    cp -v ${CUSTOM_PATCH_PATH}/lucjan/5.11/bfq-patches-v7-sep/*.patch .;
-    patch -p1 < ./0023-block-bfq-update-comments-and-default-value-in-docs-.patch;
-    patch -p1 < ./0028-Revert-block-bfq-put-reqs-of-waker-and-woken-in-disp.patch;
-    patch -p1 < ./0029-Revert-block-bfq-always-inject-I-O-of-queues-blocked.patch;
-    patch -p1 < ./0030-block-bfq-always-inject-I-O-of-queues-blocked-by-wak.patch;
-    patch -p1 < ./0031-block-bfq-put-reqs-of-waker-and-woken-in-dispatch-li.patch;
-    patch -p1 < ./0037-block-bfq-fix-the-timeout-calculation-in-bfq_bfqq_ch.patch;
-    patch -p1 < ./0038-blk-mq-bypass-IO-scheduler-s-limit_depth-for-passthr.patch;
-    patch -p1 < ./0039-bfq-mq-deadline-remove-redundant-check-for-passthrou.patch;
-    echo "*** Copying and applying BFQ 5.12 patches.. ✓";
-    cp -v ${CUSTOM_PATCH_PATH}/lucjan/5.12/bfq-patches-v15-sep/*.patch .;
-    patch -p1 < ./0024-block-bfq-remove-the-repeated-declaration.patch;
-    echo "*** Copying and applying BFQ 5.13 patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/5.13/bfq-patches-v7-sep/*.patch .;
-    patch -p1 < ./0007-bfq-Remove-merged-request-already-in-bfq_requests_me.patch;
-    cp -v ${CUSTOM_PATCH_PATH}/backports/${KERNEL_BASE_VER}/0008-blk-Fix-lock-inversion-between-ioc-lock-and-bfqd-loc.patch .;
-    patch -p1 < ./0008-blk-Fix-lock-inversion-between-ioc-lock-and-bfqd-loc.patch;
-    cp -v ${CUSTOM_PATCH_PATH}/backports/${KERNEL_BASE_VER}/5.4-from-5.13-0008-blk-Fix-lock-inversion-merge-fix*.patch .;
-    patch -p1 < ./5.4-from-5.13-0008-blk-Fix-lock-inversion-merge-fix-part1.patch;
-    patch -p1 < ./5.4-from-5.13-0008-blk-Fix-lock-inversion-merge-fix-part2.patch;
-    patch -p1 < ./0014-Revert-block-bfq-remove-the-repeated-declaration.patch;
-    patch -p1 < ./0015-block-bfq-cleanup-the-repeated-declaration.patch;
     echo "*** Copying and applying Valve fsync/futex patches.. ✓";
     cp -v ${CUSTOM_PATCH_PATH}/lucjan/5.10/futex-patches/0001-futex-patches.patch .;
     patch -p1 < ./0001-futex-patches.patch;
@@ -1506,7 +1473,6 @@ elif [ ${KERNEL_BASE_VER} == "5.4" ]; then  # LTS kernel, supported until 2025
     patch -p1 < ./0007-bootstats-add-printk-s-to-measure-boot-time-in-more-.patch;
     patch -p1 < ./0008-smpboot-reuse-timer-calibration.patch;
     patch -p1 < ./0009-Initialize-ata-before-graphics.patch;
-    patch -p1 < ./0010-give-rdrand-some-credit.patch;
     patch -p1 < ./0011-ipv4-tcp-allow-the-memory-tuning-for-tcp-to-go-a-lit.patch;
     patch -p1 < ./0012-kernel-time-reduce-ntp-wakeups.patch;
     patch -p1 < ./0013-init-wait-for-partition-and-retry-scan.patch;
@@ -1593,11 +1559,11 @@ if [ ${KERNEL_SCHEDULER} == "cacule" ] && [ "${KERNEL_TYPE}" != "rt" ]; then
 fi
 
 # Examples:
-# 5.18.7-051807+customidle-generic
-# 5.18.7-051807+customfull-generic
-# 5.18.7-051807+customrt-generic
+# 5.19.1-051901+customidle-generic
+# 5.19.1-051901+customfull-generic
+# 5.19.1-051901+customrt-generic
 # Note: A hyphen between label and type (e.g. customidle -> custom-idle) causes problems with some parsers
-# Because the final version name becomes: 5.18.7-051807+custom-idle-generic, so just keep it combined
+# Because the final version name becomes: 5.19.1-051901+custom-idle-generic, so just keep it combined
 echo "*** Updating version in changelog (necessary for Ubuntu)... ✓";
 sed -i "s/${KERNEL_SUB_VER}/${KERNEL_SUB_VER}+${KERNEL_VERSION_LABEL}${KERNEL_TYPE}/g" ./debian.master/changelog;
 
@@ -1751,7 +1717,7 @@ echo "*** Finished installing kernel, cleaning up build directory... ✓";
 rm -rf ${KERNEL_BUILD_DIR};
 
 # To list your installed kernels: sudo update-grub2
-# To uninstall a kernel: sudo apt purge *5.18.7-051807+customidle-generic*
+# To uninstall a kernel: sudo apt purge *5.19.1-051901+customidle-generic*
 # Also, keep an eye out for the directories below as they build up over time.
 echo "ls -alh /usr/src"
 ls -alh /usr/src;
