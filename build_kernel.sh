@@ -5,8 +5,8 @@
 set -euo pipefail
 
 KERNEL_BASE_VER=${KERNEL_BASE_VER:-"5.19"}
-KERNEL_PATCH_VER=${KERNEL_PATCH_VER:-"5.19.1"}
-KERNEL_SUB_VER=${KERNEL_SUB_VER:-"051901"}
+KERNEL_PATCH_VER=${KERNEL_PATCH_VER:-"5.19.11"}
+KERNEL_SUB_VER=${KERNEL_SUB_VER:-"051911"}
 KERNEL_TYPE=${KERNEL_TYPE:-"idle"}
 KERNEL_SCHEDULER=${KERNEL_SCHEDULER:-"cfs"}
 KERNEL_VERSION_LABEL=${KERNEL_VERSION_LABEL:-"custom"}
@@ -214,40 +214,52 @@ fi
 
 if [ ${KERNEL_BASE_VER} == "5.19" ]; then   # Latest mainline
     echo "*** Copying and applying arch patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/arch-patches-v2/*.patch .;
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/arch-patches-v9-sep/*.patch .;
+    patch -p1 < ./0005-soundwire-intel-use-pm_runtime_resume-on-component-p.patch;
+    patch -p1 < ./0006-Bluetooth-fix-deadlock-for-RFCOMM-sk-state-change.patch;
+    patch -p1 < ./0007-ASoC-Intel-sof_sdw-add-support-for-Dell-SKU-0AFF.patch;
     echo "*** Copying and applying aufs patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/aufs-patches/*.patch .;
     patch -p1 < ./0001-aufs-5.19-merge-v20220808.patch;
+    echo "*** Copying and applying bbr2 patches.. ✓";
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/bbr2-patches/*.patch .;
+    patch -p1 < ./0001-tcp_bbr2-introduce-BBRv2.patch;
     echo "*** Copying and applying bfq misc patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/bfq-misc-patches/*.patch .;
     patch -p1 < ./0001-bfq-misc-patches.patch;
     echo "*** Copying and applying bitmap patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/bitmap-patches/*.patch .;
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/bitmap-patches-v2/*.patch .;
     patch -p1 < ./0001-bitmap-5.19-merge-changes-from-dev-tree.patch;
     echo "*** Copying and applying boot patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/boot-patches/*.patch .;
     patch -p1 < ./0001-boot-patches.patch;
+    echo "*** Copying and applying cpu patches.. ✓";
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/cpu-patches/*.patch .;
+    patch -p1 < ./0001-cpu-patches.patch;
     echo "*** Copying and applying esdm patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/esdm-patches/*.patch .;
     patch -p1 < ./0001-esdm-5.19-introduce-Entropy-Source-and-DRNG-Manager.patch;
-    echo "*** Copying and applying folio patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/folio-patches/*.patch .;
-    patch -p1 < ./0001-folio-5.19-merge-changes-from-dev-tree.patch;
     echo "*** Copying and applying fixes misc patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/fixes-miscellaneous/*.patch .;
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/fixes-miscellaneous-v21/*.patch .;
     patch -p1 < ./0001-fixes-miscellaneous.patch;
-    echo "*** Copying and applying kbuild patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/kbuild-patches/*.patch .;
-    patch -p1 < ./0001-kbuild-patches.patch;
+    echo "*** Copying and applying folio patches.. ✓";
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/folio-patches-v2/*.patch .;
+    patch -p1 < ./0001-folio-5.19-merge-changes-from-dev-tree.patch;
+    echo "*** Copying and applying futex patches.. ✓";
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/futex-patches/*.patch .;
+    patch -p1 < ./0001-futex-5.19-Add-entry-point-for-FUTEX_WAIT_MULTIPLE-o.patch;
     echo "*** Copying and applying ksmbd patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/ksmbd-patches/*.patch .;
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/ksmbd-patches-v4/*.patch .;
     patch -p1 < ./0001-ksmbd-patches.patch;
     echo "*** Copying and applying mm patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/mm-patches/*.patch .;
     patch -p1 < ./0001-mm-vmscan-fix-extreme-overreclaim-and-swap-floods.patch;
-    echo "*** Copying and applying modules patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/modules-patches/*.patch .;
-    patch -p1 < ./0001-modules-patches.patch;
+    echo "*** Copying and applying ntfs3 patches.. ✓";
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/ntfs3-patches-v4/*.patch .;
+    patch -p1 < ./0001-ntfs3-5.19-merge-changes-from-dev-tree.patch;
+    echo "*** Copying and applying rtw88 patches.. ✓";
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/rtw88-patches/*.patch .;
+    patch -p1 < ./0001-rtw-5.19-add-rtw88-support.patch;
     echo "*** Copying and applying sched patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/sched-patches/*.patch .;
     patch -p1 < ./0001-sched-cputime-Fix-the-bug-of-reading-time-backward-f.patch;
@@ -260,21 +272,12 @@ if [ ${KERNEL_BASE_VER} == "5.19" ]; then   # Latest mainline
     echo "*** Copying and applying v4l2loopback-patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/v4l2loopback-patches/*.patch .;
     patch -p1 < ./0001-v4l2loopback-patches.patch;
-    echo "*** Copying and applying x86 patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/x86-patches/*.patch .;
-    patch -p1 < ./0001-x86-patches.patch;
-    echo "*** Copying and applying misc xanmod tweaks.. ✓";
-    cp -v ${XANMOD_PATCH_PATH}/linux-5.18.y-xanmod/xanmod/*.patch .;
-    patch -p1 < ./0009-XANMOD-mm-vmscan-vm_swappiness-30-decreases-the-amou.patch;
-    patch -p1 < ./0010-XANMOD-cpufreq-tunes-ondemand-and-conservative-gover.patch;
-    patch -p1 < ./0011-XANMOD-scripts-setlocalversion-remove-tag-for-git-re.patch;
-    patch -p1 < ./0012-XANMOD-lib-kconfig.debug-disable-default-CONFIG_SYMB.patch;
+    echo "*** Copying and applying xanmod patches.. ✓";
+    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/xanmod-patches-v3/*.patch .;
+    patch -p1 < ./0001-xanmod-patches.patch;
     echo "*** Copying and applying lucjan's zen patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/zen-patches/*.patch .;
     patch -p1 < ./0001-zen-patches.patch;
-    echo "*** Copying and applying zstd patches.. ✓";
-    cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/zstd-modules-patches/*.patch .;
-    patch -p1 < ./0001-kbuild-modules-5.19-allow-setting-zstd-compression-l.patch;
 elif [ ${KERNEL_BASE_VER} == "5.18" ]; then # Latest stable
     echo "*** Copying and applying amd p-state patches.. ✓";
     cp -v ${LUCJAN_PATCH_PATH}/${KERNEL_BASE_VER}/amd-pstate-patches-v2/*.patch .;
@@ -1559,11 +1562,11 @@ if [ ${KERNEL_SCHEDULER} == "cacule" ] && [ "${KERNEL_TYPE}" != "rt" ]; then
 fi
 
 # Examples:
-# 5.19.1-051901+customidle-generic
-# 5.19.1-051901+customfull-generic
-# 5.19.1-051901+customrt-generic
+# 5.19.11-051911+customidle-generic
+# 5.19.11-051911+customfull-generic
+# 5.19.11-051911+customrt-generic
 # Note: A hyphen between label and type (e.g. customidle -> custom-idle) causes problems with some parsers
-# Because the final version name becomes: 5.19.1-051901+custom-idle-generic, so just keep it combined
+# Because the final version name becomes: 5.19.11-051911+custom-idle-generic, so just keep it combined
 echo "*** Updating version in changelog (necessary for Ubuntu)... ✓";
 sed -i "s/${KERNEL_SUB_VER}/${KERNEL_SUB_VER}+${KERNEL_VERSION_LABEL}${KERNEL_TYPE}/g" ./debian.master/changelog;
 
@@ -1717,7 +1720,7 @@ echo "*** Finished installing kernel, cleaning up build directory... ✓";
 rm -rf ${KERNEL_BUILD_DIR};
 
 # To list your installed kernels: sudo update-grub2
-# To uninstall a kernel: sudo apt purge *5.19.1-051901+customidle-generic*
+# To uninstall a kernel: sudo apt purge *5.19.11-051911+customidle-generic*
 # Also, keep an eye out for the directories below as they build up over time.
 echo "ls -alh /usr/src"
 ls -alh /usr/src;
